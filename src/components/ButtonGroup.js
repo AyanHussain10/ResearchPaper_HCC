@@ -1,24 +1,36 @@
 import React, { useState } from 'react';
-import '../styles/ButtonGroup.module.css';
+import '../styles/ButtonGroup.module.css'; // Make sure the CSS path is correct
 
 const ButtonGroup = ({ onFetchChartData }) => {
-  const [selectedGenotype, setSelectedGenotype] = useState('KIT');
-  const [selectedTreatment, setSelectedTreatment] = useState('Control');
-  const [selectedTime, setSelectedTime] = useState('D4');
+  const [selectedGenotype, setSelectedGenotype] = useState(null);
+  const [selectedTreatment, setSelectedTreatment] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
 
   const genotypes = ['KIT', 'HO1', 'HO2', 'HC2', 'HC5'];
   const treatments = ['Control', 'HDNT'];
   const times = ['D4', 'D7', 'D10'];
 
+  const handleSelection = (type, value) => {
+    const handlers = {
+      genotype: () => setSelectedGenotype(value),
+      treatment: () => setSelectedTreatment(value),
+      time: () => setSelectedTime(value),
+    };
+    return handlers[type]();
+  };
+
+  const isActive = (type, value) => {
+    const selections = {
+      genotype: selectedGenotype,
+      treatment: selectedTreatment,
+      time: selectedTime,
+    };
+    return selections[type] === value;
+  };
+
   const handleOkClick = () => {
     if (selectedGenotype && selectedTreatment && selectedTime) {
-      // let treat, time;
-      // selectedTreatment==='Control'? treat='C':treat=`${selectedTreatment}`;
-      // selectedTime==='D4'? time='d4':time=`${selectedTime}`;
-      // selectedTime==='D7'? time='d7':time=`${selectedTime}`;
-      // selectedTime==='D10'? time='d10':time=`${selectedTime}`;
-
-      const filename = `../data/${selectedGenotype}_${selectedTreatment}_${selectedTime}_Info.json`;
+      const filename = `${selectedGenotype}_${selectedTreatment}_${selectedTime}_Info.json`;
       onFetchChartData(filename);
     } else {
       alert('Please select an option from each category.');
@@ -27,43 +39,21 @@ const ButtonGroup = ({ onFetchChartData }) => {
 
   return (
     <div className="button-group">
-      <div className="category">
-        <div className="label">Genotype</div>
-        {genotypes.map(genotype => (
-          <button
-            key={genotype}
-            className={selectedGenotype === genotype ? 'button selected' : 'button'}
-            onClick={() => setSelectedGenotype(genotype)}
-          >
-            {selectedGenotype === genotype ? '✓ ' : ''}{genotype}
-          </button>
-        ))}
-      </div>
-      <div className="category">
-        <div className="label">Treatment</div>
-        {treatments.map(treatment => (
-          <button
-            key={treatment}
-            className={selectedTreatment === treatment ? 'button selected' : 'button'}
-            onClick={() => setSelectedTreatment(treatment)}
-          >
-            {selectedTreatment === treatment ? '✓ ' : ''}{treatment}
-          </button>
-        ))}
-      </div>
-      <div className="category">
-        <div className="label">Time</div>
-        {times.map(time => (
-          <button
-            key={time}
-            className={selectedTime === time ? 'button selected' : 'button'}
-            onClick={() => setSelectedTime(time)}
-          >
-            {selectedTime === time ? '✓ ' : ''}{time}
-          </button>
-        ))}
-      </div>
-      <button onClick={handleOkClick}>OK</button>
+      {['genotype', 'treatment', 'time'].map((category) => (
+        <div key={category} className="category">
+          <div className="label">{category.charAt(0).toUpperCase() + category.slice(1)}</div>
+          {eval(category + 's').map((item) => (
+            <button
+              key={item}
+              className={`button ${isActive(category, item) ? 'selected' : ''}`}
+              onClick={() => handleSelection(category, item)}
+            >
+              {isActive(category, item) ? '✓ ' : ''}{item}
+            </button>
+          ))}
+        </div>
+      ))}
+      <button onClick={handleOkClick} className="ok-button">OK</button>
     </div>
   );
 };

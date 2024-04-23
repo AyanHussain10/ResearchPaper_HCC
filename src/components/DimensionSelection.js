@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from '../styles/DimensionSelection.module.css';
-import ButtonGroup from './ButtonGroup';
+import CheckboxTable from './CheckboxTable';
 
 const DimensionSelection = ({ onFetchChartData }) => {
   return (
     <div className={styles.dimensionSelection}>
       <h2 className={styles.dimensionTitle}>Dimension Selection</h2>
-      <ButtonGroup onFetchChartData={onFetchChartData} />
+      <CheckboxTable onFetchChartData={onFetchChartData} />
     </div>
   );
 };
