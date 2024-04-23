@@ -1,0 +1,5 @@
+.heightGraph {
+  grid-column: 1; /* First column */
+  grid-row: 2; /* First row */
+  border: 1px solid orange;
+}

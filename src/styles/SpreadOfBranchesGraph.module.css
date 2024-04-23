@@ -1,0 +1,5 @@
+.spreadOfBranchesGraph {
+  grid-column: 1; /* First column */
+  grid-row: 3; /* Second row */
+  border: 1px solid pink;
+}

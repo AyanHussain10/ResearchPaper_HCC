@@ -1,0 +1,90 @@
+.segmentView {
+  position: relative;
+  border: 2px solid darkgray;
+  float: left;
+  height: 1280px;
+  width: 100%;
+    /* grid-template-rows: 200px 100px; */
+  }
+
+
+.segmentTitle{
+  background-color: lightgrey;
+  height: 45px;
+  margin: 3px 2px 3px 2px;
+  text-align: center; 
+  font-size: 28px;
+  font-weight: normal;
+  /* margin-bottom: 20px;  */
+  /* grid-template-rows: 1fr; */
+  /* display: top; */
+}
+
+.segmentIndividualTimeDiff {
+  position: relative;
+  border: 2px solid darkgray;
+  width: 98%;
+  margin: 3px auto 3px auto;
+  height: 600px;
+}
+
+.segmentIndividual {
+  position: absolute;
+  left: 1%;
+  border: 2px solid darkgray;
+  width: 65%;
+  margin: 3px auto 3px auto;
+  height: 98%;
+}
+
+.segmentTimeDiff {
+  position: absolute;
+  left: 68%;
+  border: 2px solid darkgray;
+  width: 30%;
+  margin: 3px auto 3px auto;
+  height: 98%;
+}
+
+.segmentTimeDiffName, .segmentIndividualName, .segmentTrtDiffName, .segmentGenoDiffName {
+  background-color: lightgrey;
+  height: 36px;
+  margin: 3px 2px 3px 2px;
+  text-align: center; 
+  font-size: 24px;
+  font-weight: normal;
+}
+
+.segmentTrtDiff {
+  position: relative;
+  border: 2px solid darkgray;
+  width: 98%;
+  margin: 3px auto 3px auto;
+  height: 300px;
+}
+
+.segmentGenoDiff {
+  position: relative;
+  border: 2px solid darkgray;
+  width: 98%;
+  margin: 3px auto 3px auto;
+  height: 300px;
+}
+
+.segmentTrtDiffName, .segmentGenoDiffName {
+  position: absolute;
+  right: 36px;
+  bottom: 0px;
+  transform: rotate(90deg);
+  transform-origin: bottom right;
+  width: 295px;
+}
+  
+  /* .segmentView::-webkit-scrollbar, .branchView::-webkit-scrollbar {
+    width: 5px;
+  } */
+  
+  /* .segmentView::-webkit-scrollbar-thumb, .branchView::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    border-radius: 5px;
+  } */

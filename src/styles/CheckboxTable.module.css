@@ -1,0 +1,35 @@
+.checkboxWithDimName {
+    position: relative;
+    width: 95%;
+    height: 20px;
+    float: left;
+    margin: 20px auto 25px auto;
+    /* border: 2px solid darkgray; */
+    /* width: 350px; */
+    /* margin: 10px 25px 10px 25px; */
+}
+
+.dimName {
+    width: 40%;
+    font-size: 20px;
+    text-align: left;
+    /* border: 2px solid darkgray;  */
+    position: absolute;
+    top: 20%;
+    left: 3%;
+}
+
+.checkboxWithLabel {
+    position: absolute;
+    top: 30%;
+    left: 45%;
+    border: 2px solid darkgray;
+    width: 55%;
+    /* margin: 10px 25px 10px 25px; */
+}
+
+.checkboxEach {
+    width: 20%;
+    text-align: center; 
+}
+

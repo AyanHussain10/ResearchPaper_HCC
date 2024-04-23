@@ -1,0 +1,41 @@
+.App {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* Adjust these fractions based on your actual design needs */
+  gap: 20px;
+  padding: 20px;
+  height: 100vh; /* Assuming you want the app to fill the entire height of the viewport */
+}
+
+/* .dimensionSelection {
+  grid-column: 1 / -1; /* This will span all columns */
+  /* background-color: #f0f0f0;
+  border: 1px solid black;
+  padding: 10px; */
+  /* ... other styles ... */
+/* } */
+
+/* .segmentView {
+  grid-column: 1 / 3; /* This will span the first two columns */
+  /* grid-row: 2; Positioned in the second row */
+  /* ... other styles ... */
+/* } */ 
+
+
+
+/* .heightGraph {
+  grid-column: 1;
+  grid-row: 1;
+  /* ... other styles ... */
+/* } */
+
+/* .spreadOfBranchesGraph {
+  grid-column: 1;
+  grid-row: 2;
+  /* ... other styles ... */
+/* } */
+
+/* .branchTopView {
+  grid-column: 2;
+  grid-row: 1 / 3; /* Spans both rows */
+  /* ... other styles ... */
+/* } */
