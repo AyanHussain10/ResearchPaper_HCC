@@ -53,6 +53,7 @@ const SegmentView = ({ dataUrls }) => {
 
   useEffect(() => {
     dataUrls.forEach(url => {
+      console.log(url);
       fetch(`/data/${url}`)
         .then(response => response.json())
         .then(data => {

@@ -14,6 +14,14 @@ const CheckboxTable = ({ onFetchChartData }) => {
     time: ['D4', 'D7', 'D10']
   };
 
+  const filenameMap = {
+    Control: 'C',
+    HDNT: 'H',
+    D4: '4D',
+    D7: '7D',
+    D10: '10D'
+  };
+
   const handleCheckboxChange = (category, value) => {
     const current = selectedOptions[category];
     const newSelection = current.includes(value) ?
@@ -26,7 +34,7 @@ const CheckboxTable = ({ onFetchChartData }) => {
       selectedOptions.genotype.forEach(genotype => {
         selectedOptions.treatment.forEach(treatment => {
           selectedOptions.time.forEach(time => {
-            const filename = `${genotype}_${treatment}_${time}_Info.json`;
+            const filename = `${genotype}_${filenameMap[treatment]}_${filenameMap[time]}_Info.json`;
             onFetchChartData(filename);
           });
         });
