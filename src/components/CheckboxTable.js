@@ -2,57 +2,56 @@ import React, { useState } from 'react';
 import styles from '../styles/CheckboxTable.module.css';
 
 const CheckboxTable = ({ onFetchChartData }) => {
-  const [selectedGenotype, setSelectedGenotype] = useState(null);
-  const [selectedTreatment, setSelectedTreatment] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState({
+    genotype: [],
+    treatment: [],
+    time: []
+  });
 
-  const genotypes = ['KIT', 'HO1', 'HO2', 'HC2', 'HC5'];
-  const treatments = ['Control', 'HDNT'];
-  const times = ['D4', 'D7', 'D10'];
-
-  const handleSelection = (type, value) => {
-    const handlers = {
-      genotype: () => setSelectedGenotype(value),
-      treatment: () => setSelectedTreatment(value),
-      time: () => setSelectedTime(value),
-    };
-    handlers[type]();
+  const options = {
+    genotype: ['KIT', 'HO1', 'HO2', 'HC2', 'HC5'],
+    treatment: ['Control', 'HDNT'],
+    time: ['D4', 'D7', 'D10']
   };
 
-  const isActive = (type, value) => {
-    const selections = {
-      genotype: selectedGenotype,
-      treatment: selectedTreatment,
-      time: selectedTime,
-    };
-    return selections[type] === value;
+  const handleCheckboxChange = (category, value) => {
+    const current = selectedOptions[category];
+    const newSelection = current.includes(value) ?
+      current.filter(item => item !== value) : [...current, value];
+    setSelectedOptions({ ...selectedOptions, [category]: newSelection });
   };
 
   const handleOkClick = () => {
-    if (selectedGenotype && selectedTreatment && selectedTime) {
-      const filename = `${selectedGenotype}_${selectedTreatment}_${selectedTime}_Info.json`;
-      onFetchChartData(filename);
+    if (selectedOptions.genotype.length && selectedOptions.treatment.length && selectedOptions.time.length) {
+      selectedOptions.genotype.forEach(genotype => {
+        selectedOptions.treatment.forEach(treatment => {
+          selectedOptions.time.forEach(time => {
+            const filename = `${genotype}_${treatment}_${time}_Info.json`;
+            onFetchChartData(filename);
+          });
+        });
+      });
     } else {
-      alert('Please select an option from each category.');
+      alert('Please select at least one option from each category.');
     }
   };
 
   return (
     <div className={styles.checkboxTable}>
-      {['genotype', 'treatment', 'time'].map((category) => (
+      {Object.keys(options).map(category => (
         <div key={category} className={styles.checkboxWithDimName}>
           <p className={styles.dimName}>{category.charAt(0).toUpperCase() + category.slice(1)}</p>
           <table className={styles.checkboxWithLabel}>
             <tbody>
               <tr>
-                {eval(category + 's').map((item) => (
+                {options[category].map(item => (
                   <td key={item} className={styles.checkboxEach}>
                     <label>
                       <input
                         type="checkbox"
                         name={item}
-                        checked={isActive(category, item)}
-                        onChange={() => handleSelection(category, item)}
+                        checked={selectedOptions[category].includes(item)}
+                        onChange={() => handleCheckboxChange(category, item)}
                       />
                       {item}
                     </label>

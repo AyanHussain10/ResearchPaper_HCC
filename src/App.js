@@ -6,16 +6,16 @@ import './App.css';
 
 function App() {
 
-  const [filename, setFilename] = useState('');
+  const [dataUrls, setDataUrls] = useState([]);
 
-  const handleFetchChartData = (filename) => {
-    setFilename(filename);
+  const fetchChartData = (filename) => {
+    setDataUrls(prevUrls => [...prevUrls, filename]);
   };
 
   return (
     <div className="App">
-      <DimensionSelection onFetchChartData={handleFetchChartData} />
-      <SegmentView filename={filename} />
+      <DimensionSelection onFetchChartData={fetchChartData} />
+      <SegmentView dataUrls={dataUrls} />
       <BranchView />
     </div>
   );

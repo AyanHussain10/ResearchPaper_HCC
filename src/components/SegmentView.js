@@ -48,26 +48,20 @@ function transformDataForRadarChart(jsonData) {
   return [dataForChart]; // RadarChart expects an array of these data arrays
 }
 
-const SegmentView = ({ filename }) => {
-  const [radarChartData, setRadarChartData] = useState(null);
+const SegmentView = ({ dataUrls }) => {
+  const [chartsData, setChartsData] = useState([]);
 
   useEffect(() => {
-    const url = `/data/${filename}`; // Dynamic URL based on the filename
-    fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        const processedData = transformDataForRadarChart(data);
-        setRadarChartData(processedData);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, [filename]); // Depend on filename to refetch when it changes
+    dataUrls.forEach(url => {
+      fetch(`/data/${url}`)
+        .then(response => response.json())
+        .then(data => {
+          const radarData = transformDataForRadarChart(data);
+          setChartsData(prevData => [...prevData, radarData]);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    });
+  }, [dataUrls]);
 
   return (
     <div className={styles.segmentView}>
@@ -77,21 +71,17 @@ const SegmentView = ({ filename }) => {
           <div className={styles.segmentIndividualName}> 
             Individual Sample
           </div>
-          {radarChartData ? (
-            <RadarChartComponent data={radarChartData} />
-          ) : (
-            <p>Loading data...</p>
-          )}
+          {chartsData.map((chartData, index) => (
+        <RadarChartComponent key={index} data={chartData} />
+      ))}
         </div>
         <div className={styles.segmentTimeDiff} >
           <div className={styles.segmentTimeDiffName}> 
             TIME DIFF
           </div>
-          {radarChartData ? (
-            <RadarChartComponent data={radarChartData} />
-          ) : (
-            <p>Loading data...</p>
-          )}
+          {chartsData.map((chartData, index) => (
+        <RadarChartComponent key={index} data={chartData} />
+      ))}
         </div>
         
       </div>
@@ -99,21 +89,17 @@ const SegmentView = ({ filename }) => {
         <div className={styles.segmentTrtDiffName}> 
           TREATMENT DIFF
         </div>
-        {radarChartData ? (
-          <RadarChartComponent data={radarChartData} />
-        ) : (
-          <p>Loading data...</p>
-        )}
+        {chartsData.map((chartData, index) => (
+        <RadarChartComponent key={index} data={chartData} />
+      ))}
       </div>
       <div className={styles.segmentGenoDiff}>
         <div className={styles.segmentGenoDiffName}> 
           GENOTYPE DIFF
         </div>
-        {radarChartData ? (
-          <RadarChartComponent data={radarChartData} />
-        ) : (
-          <p>Loading data...</p>
-        )}
+        {chartsData.map((chartData, index) => (
+        <RadarChartComponent key={index} data={chartData} />
+      ))}
       </div>
       
     </div>
