@@ -1,0 +1,37 @@
+.dimensionColorContainer {
+    margin-top: 20px;
+    overflow-x: auto;
+  }
+  
+  .dimensionColorTable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+  }
+  
+  .dimensionColorTable th,
+  .dimensionColorTable td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    min-width: 50px;
+    position: relative;
+  }
+  
+  /* .dimensionColorTable th {
+    background-color: #333;
+    color: white;
+  } */
+
+  .dimensionColorTable td::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: inherit;
+    opacity: inherit; /* Use the inherited opacity */
+    z-index: -1; /* Place the pseudo-element behind the content */
+  }
+  
