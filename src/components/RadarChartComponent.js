@@ -2,11 +2,11 @@
 import * as d3 from 'd3';
 import React, { useEffect, useRef } from 'react';
 import styles from '../styles/RadarChart.module.css';
-
+let colorRadar;
 
 // Radar chart function from the code you provided
 // Put the RadarChart function code here
-function RadarChart(container, data, options){
+function RadarChart(container, data, options, color){
     const cfg = {
         w: 100,
         h: 100,
@@ -19,7 +19,7 @@ function RadarChart(container, data, options){
         dotRadius: 4,
         strokeWidth: 2,
         roundStrokes: true,
-        color: d3.scaleOrdinal(d3.schemeCategory10)
+        color: d3.scaleOrdinal().range([`${colorRadar}`])
     };
 
     if (typeof options !== 'undefined') {
@@ -170,22 +170,17 @@ function RadarChart(container, data, options){
 
 
 // Component to display the radar chart
-const RadarChartComponent = ({ data }) => {
-  // Create a ref for the D3 container
-  const d3Container = useRef(null);
-
-  useEffect(() => {
-    if (data && d3Container.current) {
-      // Call the RadarChart function to create the chart
-      RadarChart(d3Container.current, data, {
-        // Add your options here
-      });
-    }
-  }, [data, d3Container]);
-
-  return (
-    <div id="radar-chart" ref={d3Container} />
-  );
-};
+const RadarChartComponent = ({ data, color }) => {
+    const d3Container = useRef(null);
+    console.log(color)
+    colorRadar=color;
+    useEffect(() => {
+      if (data && d3Container.current) {
+        RadarChart(d3Container.current, data, color);
+      }
+    }, [data, color, d3Container]);
+  
+    return <div ref={d3Container} className={styles.radarChart}></div>;
+  };
 
 export default RadarChartComponent;
