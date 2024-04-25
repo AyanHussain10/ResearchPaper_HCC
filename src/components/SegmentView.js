@@ -3,16 +3,16 @@ import styles from '../styles/SegmentView.module.css';
 import RadarChartComponent from './RadarChartComponent';
 
 const colorMapping = {
-  'KIT x HDNT': 'crimson',
-  'HC5 x HDNT': 'navy',
-  'KIT x CONTROL': '#50C878',
-  'HC5 x CONTROL': 'gold', // Changed from 'mustard' to 'gold' which is a recognized CSS color
-  'HO1 x HDNT': 'purple', // Changed from 'royalpurple' to 'purple' which is a recognized CSS color
-  'HO1 x CONTROL': 'orange', // Changed from 'burntorange' to 'orange' which is a recognized CSS color
-  'HO2 x HDNT': 'teal', // Changed from 'tealblue' to 'teal' which is a recognized CSS color
-  'HO2 x CONTROL': 'fuchsia', // Changed from 'magenta' to 'fuchsia' which is a recognized CSS color
-  'HC2 x HDNT': 'pink', // 'pink' is a recognized CSS color
-  'HC2 x CONTROL': 'turquoise', // 'turquoise' is a recognized CSS color
+  'KIT x HDNT':  ['#FF6347', '#FF2400', '#B21800'],
+  'HC5 x HDNT': ['#6699CC', '#0047AB', '#002D6F'],
+  'KIT x CONTROL': ['#80D641', '#4CBB17', '#347C0E'],
+  'HC5 x CONTROL': ['#FFD700', '#FFBF00', '#B18904'],
+  'HO1 x HDNT': ['#D783FF', '#8F00FF', '#5C00CC'],
+  'HO1 x CONTROL': ['#8FEBEB', '#40E0D0', '#287C7D'],
+  'HO2 x HDNT': ['#FFA785', '#FF7F50', '#CC3C1E'],
+  'HO2 x CONTROL': ['#A2B3BF', '#708090', '#4C606D'],
+  'HC2 x HDNT': ['#FF66FF', '#FF00FF', '#B300B3'],
+  'HC2 x CONTROL': ['#B3B300', '#808000', '#505000'],
 };
 
 // Function to calculate the user-defined vegetation index
@@ -64,16 +64,16 @@ function transformDataForRadarChart(jsonData) {
 const SegmentView = ({ dataUrls }) => {
 
   const colorMapping = {
-    'KIT x HDNT': 'crimson',
-    'HC5 x HDNT': 'navy',
-    'KIT x CONTROL': '#50C878',
-    'HC5 x CONTROL': 'gold', 
-    'HO1 x HDNT': 'purple', 
-    'HO1 x CONTROL': 'orange', 
-    'HO2 x HDNT': 'teal',
-    'HO2 x CONTROL': 'fuchsia', 
-    'HC2 x HDNT': 'pink',
-    'HC2 x CONTROL': 'turquoise',
+    'KIT x HDNT':  ['#FF6347', '#FF2400', '#B21800'],
+    'HC5 x HDNT': ['#6699CC', '#0047AB', '#002D6F'],
+    'KIT x CONTROL': ['#80D641', '#4CBB17', '#347C0E'],
+    'HC5 x CONTROL': ['#FFD700', '#FFBF00', '#B18904'],
+    'HO1 x HDNT': ['#D783FF', '#8F00FF', '#5C00CC'],
+    'HO1 x CONTROL': ['#8FEBEB', '#40E0D0', '#287C7D'],
+    'HO2 x HDNT': ['#FFA785', '#FF7F50', '#CC3C1E'],
+    'HO2 x CONTROL': ['#A2B3BF', '#708090', '#4C606D'],
+    'HC2 x HDNT': ['#FF66FF', '#FF00FF', '#B300B3'],
+    'HC2 x CONTROL': ['#B3B300', '#808000', '#505000'],
   };
 
   const [chartsData, setChartsData] = useState([]);
