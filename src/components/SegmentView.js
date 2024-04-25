@@ -50,7 +50,12 @@ function transformDataForRadarChart(jsonData) {
 
 const SegmentView = ({ dataUrls }) => {
   const [chartsData, setChartsData] = useState([]);
-
+  
+  chartsData.forEach(function(element, index) {
+    console.log(index, element);
+    console.log("********");
+  });
+  
   useEffect(() => {
     dataUrls.forEach(url => {
       console.log(url);
@@ -63,19 +68,34 @@ const SegmentView = ({ dataUrls }) => {
         .catch(error => console.error('Error fetching data:', error));
     });
   }, [dataUrls]);
+  
+  // chartsData.forEach((chartData, index) => {
+  //   console.log("********")
+  //   console.log(chartData)   
+  // })
+  
 
+  
+  
   return (
     <div className={styles.segmentView}>
+
       <h2 className={styles.segmentTitle}>Segment View</h2>
+
       <div className={styles.segmentIndividualTimeDiff}>
         <div className={styles.segmentIndividual}>
+
           <div className={styles.segmentIndividualName}> 
-            Individual Sample
+            Individual Sample  
           </div>
-          {chartsData.map((chartData, index) => (
-        <RadarChartComponent key={index} data={chartData} />
-      ))}
+
+          <div className={styles.segmentIndividualCharts}> 
+            {chartsData.map((chartData, index) => (
+              <RadarChartComponent key={index} data={chartData} />
+            ))}
+          </div>
         </div>
+
         <div className={styles.segmentTimeDiff} >
           <div className={styles.segmentTimeDiffName}> 
             TIME DIFF

@@ -44,33 +44,59 @@ const CheckboxTable = ({ onFetchChartData }) => {
     }
   };
 
+  const handleClearClick  = () => {
+    setSelectedOptions({genotype: [], treatment: [], time: []})
+  };
+
   return (
-    <div className={styles.checkboxTable}>
+    <div className={styles.dimensionContent}>
       {Object.keys(options).map(category => (
+
         <div key={category} className={styles.checkboxWithDimName}>
-          <p className={styles.dimName}>{category.charAt(0).toUpperCase() + category.slice(1)}</p>
-          <table className={styles.checkboxWithLabel}>
-            <tbody>
-              <tr>
-                {options[category].map(item => (
-                  <td key={item} className={styles.checkboxEach}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        name={item}
-                        checked={selectedOptions[category].includes(item)}
-                        onChange={() => handleCheckboxChange(category, item)}
-                      />
-                      {item}
-                    </label>
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
+          
+          <div className={styles.dimName}>
+            <p>{category.charAt(0).toUpperCase() + category.slice(1)}</p>
+          </div>
+
+          <div className={styles.checkboxWithLabel}>
+            <table>
+              <tbody>
+                <tr>
+                  {options[category].map(item => (
+                    <td key={item} className={styles.checkboxEachBoxLabel}>
+                      
+                      <div className={styles.checkboxEachBox}>
+                        <label>
+                          <input
+                            type="checkbox"
+                            name={item}
+                            checked={selectedOptions[category].includes(item)}
+                            onChange={() => handleCheckboxChange(category, item)}
+                          />
+                        </label>
+                      </div>
+                      
+                      <div className={styles.checkboxEachLabel}>
+                        {item}
+                      </div>
+
+                    </td>
+                  ))}
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       ))}
-      <button onClick={handleOkClick} className="ok-button">OK</button>
+      <button onClick={handleOkClick} className={styles.buttons}>
+        OK
+      </button>
+
+      <button onClick={handleClearClick} className={styles.buttons}>
+        Clear
+      </button>
+      
     </div>
   );
 };

@@ -1,10 +1,9 @@
 .segmentView {
   position: relative;
   border: 2px solid darkgray;
-  float: left;
-  height: 1280px;
+  /* float: left; */
+  height: 1350px;
   width: 100%;
-    /* grid-template-rows: 200px 100px; */
   }
 
 
@@ -15,9 +14,6 @@
   text-align: center; 
   font-size: 28px;
   font-weight: normal;
-  /* margin-bottom: 20px;  */
-  /* grid-template-rows: 1fr; */
-  /* display: top; */
 }
 
 .segmentIndividualTimeDiff {
@@ -25,7 +21,8 @@
   border: 2px solid darkgray;
   width: 98%;
   margin: 3px auto 3px auto;
-  height: 600px;
+  /* height: 600px; */
+  height: 50%;
 }
 
 .segmentIndividual {
@@ -37,6 +34,12 @@
   height: 98%;
 }
 
+.segmentIndividualCharts {
+  height: 93%;
+  width: 98%;
+  margin: auto;
+  border: 2px solid red;
+}
 .segmentTimeDiff {
   position: absolute;
   left: 68%;

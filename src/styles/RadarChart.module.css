@@ -22,10 +22,10 @@
     stroke-width: 0.5;
 }
 
-.gridCircle {
+/* .gridCircle {
     fill: none;
     stroke: #eee;
-}
+} */
 
 .axis line {
     stroke: #bbb;

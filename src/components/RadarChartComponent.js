@@ -7,6 +7,7 @@ import styles from '../styles/RadarChart.module.css';
 // Radar chart function from the code you provided
 // Put the RadarChart function code here
 function RadarChart(container, data, options){
+
     const cfg = {
         w: 100,
         h: 100,
@@ -19,6 +20,7 @@ function RadarChart(container, data, options){
         dotRadius: 4,
         strokeWidth: 2,
         roundStrokes: true,
+        // color: d3.scaleOrdinal(d3.schemeCategory10)
         color: d3.scaleOrdinal(d3.schemeCategory10)
     };
 

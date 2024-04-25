@@ -1,10 +1,12 @@
 .App {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* Adjust these fractions based on your actual design needs */
-  gap: 20px;
-  padding: 20px;
-  height: 100vh; /* Assuming you want the app to fill the entire height of the viewport */
+  grid-template-columns: 1fr 2fr 2fr; 
+  gap: 10px;
+  padding: 10px;
+  height: 1500px; 
 }
+/* Adjust these fractions based on your actual design needs */
+/* Assuming you want the app to fill the entire height of the viewport */
 
 /* .dimensionSelection {
   grid-column: 1 / -1; /* This will span all columns */
