@@ -4,31 +4,29 @@ import HeightGraph from './HeightGraph';
 import SpreadOfBranchesGraph from './SpreadOfBranchesGraph';
 import DayTenView from './DayTenView';
 
-
 const BranchView = ({ dataMap }) => {
   // Convert dataMap to the required format for HeightGraph
-  const plotData = Object.entries(dataMap).map(([time, details]) => ({
+  const plotData = Object.entries(dataMap).map(([time, genotypes]) => ({
     time,
-    data: Object.entries(details).flatMap(([genotype, treatments]) =>
-      Object.entries(treatments).map(([treatment, value]) => ({
-        category: `${genotype} x ${treatment}`,
-        values: [value] // Assuming value holds data in the format expected by HeightGraph
+    data: Object.values(genotypes).flatMap(genotypeData =>
+      Object.values(genotypeData).map(entry => ({
+        category: `${entry.genotype} x ${entry.treatment}`,
+        values: Object.values(entry.branches || {}).map(branch => branch.branchHeight)
       }))
     )
   }));
-  
+
   return (
     <div className={styles.branchView}>
       <h2 className={styles.branchTitle}>Branch View</h2>
-      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+      <div style={{ display: 'block', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around' }}>
         {plotData.map(plot => (
           <div key={plot.time} className={styles.branchHeight}>
-            <h3>{plot.time} Height</h3>
+            <h3>{`${plot.time} Height`}</h3>
             <HeightGraph data={plot.data} />
           </div>
         ))}
       </div>
-      
 
       <div className={styles.branchSpread}>
         <div className={styles.branchSpreadName}> 
@@ -47,8 +45,6 @@ const BranchView = ({ dataMap }) => {
           <DayTenView />
         </div>
       </div>
-
-      {/* Insert additional components for the branch view */}
     </div>
   );
 };
