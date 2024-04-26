@@ -5,8 +5,6 @@ import BranchView from './components/BranchView';
 import './App.css';
 
 function App() {
-  
-  // Initialize the dataMap with keys for possible time values
   const [dataMap, setDataMap] = useState({ '4D': {}, '7D': {}, '10D': {} });
   const [dataUrls, setDataUrls] = useState([]);
 
@@ -15,7 +13,7 @@ function App() {
     const parts = filename.split('_');
     const genotype = parts[0];
     const treatment = parts[1] === 'H' ? 'HDNT' : 'CONTROL';
-    const time = parts[2]; // e.g., "D4"
+    const time = parts[2]; // e.g., "4D"
 
     // Check if time key exists in the dataMap, then update the nested structure
     setDataMap(prevDataMap => {
@@ -37,17 +35,15 @@ function App() {
         genotype: genotype,
         treatment: treatment
       };
-      console.log(newDataMap);
       return newDataMap;
     });
-  
   };
 
   return (
     <div className="App">
       <DimensionSelection onFetchChartData={fetchChartData} />
       <SegmentView dataUrls={dataUrls} />
-      <BranchView />
+      <BranchView dataMap={dataMap} />
     </div>
   );
 }

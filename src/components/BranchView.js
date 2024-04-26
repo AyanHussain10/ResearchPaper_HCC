@@ -5,18 +5,28 @@ import SpreadOfBranchesGraph from './SpreadOfBranchesGraph';
 import DayTenView from './DayTenView';
 
 
-const BranchView = () => {
+const BranchView = ({ dataMap }) => {
+  // Convert dataMap to the required format for HeightGraph
+  const plotData = Object.entries(dataMap).map(([time, details]) => ({
+    time,
+    data: Object.entries(details).flatMap(([genotype, treatments]) =>
+      Object.entries(treatments).map(([treatment, value]) => ({
+        category: `${genotype} x ${treatment}`,
+        values: [value] // Assuming value holds data in the format expected by HeightGraph
+      }))
+    )
+  }));
+  
   return (
     <div className={styles.branchView}>
       <h2 className={styles.branchTitle}>Branch View</h2>
-      <div className={styles.branchHeight}>
-        <div className={styles.branchHeightName}> 
-          Branch Height
+      <div>{plotData.map(plot => (
+        <div key={plot.time} className={styles.branchHeight}>
+          <h3>{plot.time} Height</h3>
+          <HeightGraph data={plot.data} />
         </div>
-        <div className={styles.branchHeightPlot}>
-          <HeightGraph />
-        </div>
-      </div>
+      ))}</div>
+      
 
       <div className={styles.branchSpread}>
         <div className={styles.branchSpreadName}> 
