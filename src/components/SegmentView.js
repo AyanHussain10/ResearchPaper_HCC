@@ -78,10 +78,10 @@ const SegmentView = ({ dataUrls }) => {
 
   const [chartsData, setChartsData] = useState([]);
   
-  chartsData.forEach(function(element, index) {
-    console.log(index, element);
-    console.log("********");
-  });
+  // chartsData.forEach(function(element, index) {
+  //   console.log(index, element);
+  //   console.log("********");
+  // });
   
   useEffect(() => {
     dataUrls.forEach(url => {
@@ -89,15 +89,24 @@ const SegmentView = ({ dataUrls }) => {
       fetch(`/data/${url}`)
         .then(response => response.json())
         .then(data => {
+          
           const radarData = transformDataForRadarChart(data);
-
           const urlParts = url.split('_');
-          console.log(urlParts);
           const genotype = urlParts[0];
           const treatmentCode = urlParts[1][0];
-          const treatment = treatmentCode === 'H' ? 'HDNT' : 'Control';
+          const treatment = treatmentCode === 'H' ? 'HDNT' : 'CONTROL';
+          const timeSeq = urlParts[2];
+          let indexTime;
+          if (timeSeq === "4D") {
+            indexTime = 0;
+          } else if (timeSeq === "7D") {
+            indexTime = 1;
+          } else {
+            indexTime = 2;
+          }
+
           const colorKey = `${genotype} x ${treatment}`;
-          const color = colorMapping[colorKey] || 'gray'; // Fetch color from mapping
+          const color = colorMapping[colorKey][indexTime];
           setChartsData(prevData => 
             [...prevData, { data: radarData, color: color }]);
         })
@@ -109,9 +118,6 @@ const SegmentView = ({ dataUrls }) => {
   //   console.log("********")
   //   console.log(chartData)   
   // })
-  
-
-  
   
   return (
     <div className={styles.segmentView}>
@@ -125,10 +131,11 @@ const SegmentView = ({ dataUrls }) => {
             Individual Sample  
           </div>
 
-          <div className={styles.segmentIndividualCharts}> 
+          <div className={styles.segmentIndividualChartsGroup}> 
+            
             {chartsData.map((chartData, index) => (
               <RadarChartComponent key={index} 
-                data={chartData.color} color={chartData.color} />
+                data={chartData.data} color={chartData.color} />
             ))}
           </div>
         </div>
@@ -139,7 +146,7 @@ const SegmentView = ({ dataUrls }) => {
           </div>
           {chartsData.map((chartData, index) => (
             <RadarChartComponent key={index} 
-              data={chartData.color} color={chartData.color} />
+              data={chartData.data} color={chartData.color} />
           ))}
         </div>
         
@@ -150,7 +157,7 @@ const SegmentView = ({ dataUrls }) => {
         </div>
         {chartsData.map((chartData, index) => (
           <RadarChartComponent key={index} 
-            data={chartData.color} color={chartData.color} />
+            data={chartData.data} color={chartData.color} />
         ))}
       </div>
       <div className={styles.segmentGenoDiff}>
@@ -159,7 +166,7 @@ const SegmentView = ({ dataUrls }) => {
         </div>
         {chartsData.map((chartData, index) => (
           <RadarChartComponent key={index} 
-            data={chartData.color} color={chartData.color} />
+            data={chartData.data} color={chartData.color} />
         ))}
       </div>
       

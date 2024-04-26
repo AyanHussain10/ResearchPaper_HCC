@@ -8,21 +8,21 @@ let colorRadar;
 // Radar chart function from the code you provided
 // Put the RadarChart function code here
 
-function RadarChart(container, data, options, color){
+function RadarChart(container, data, color, options){
 
     const cfg = {
         w: 100,
         h: 100,
         margin: {top: 50, right: 50, bottom: 50, left: 50},
-        levels: 5,
+        levels: 8,
         maxValue: 0,
         labelFactor: 1.1,
         wrapWidth: 60,
         opacityArea: 0.35,
-        dotRadius: 4,
-        strokeWidth: 2,
+        dotRadius: 3,
+        strokeWidth: 1,
         roundStrokes: true,
-        color: d3.scaleOrdinal().range([`${colorRadar}`])
+        color: d3.scaleOrdinal().range([`${color}`])
     };
 
     if (typeof options !== 'undefined') {
@@ -43,7 +43,9 @@ function RadarChart(container, data, options, color){
 
 
     //If the supplied maxValue is smaller than the actual one, replace by the max in the data
-    let maxValue = Math.max(cfg.maxValue, d3.max(data, function(i){ return d3.max(i.map(function(o){ return o.value; })); }));
+    let maxValue = Math.max(cfg.maxValue, 
+        d3.max(data, function(i)
+        { return d3.max(i.map(function(o){ return o.value; })); }));
 
     const allAxis = data[0].map((i, j) => i.axis),  //Names of each axis
         total = allAxis.length,                    //The number of different axes
@@ -146,7 +148,7 @@ function RadarChart(container, data, options, color){
         .attr("r", cfg.dotRadius)
         .attr("cx", function(d, i){ return rScale(d.value) * Math.cos(angleSlice*i - Math.PI/2); })
         .attr("cy", function(d, i){ return rScale(d.value) * Math.sin(angleSlice*i - Math.PI/2); })
-        .style("fill", function(d, i,j) { return cfg.color(j); })
+        .style("fill", function(d, i, j) { return cfg.color(j); })
         .style("fill-opacity", 0.8);
 
     //Tooltip
@@ -176,6 +178,7 @@ function RadarChart(container, data, options, color){
 const RadarChartComponent = ({ data, color }) => {
   // Create a ref for the D3 container
   const d3Container = useRef(null);
+  console.log("********************");
   console.log(color);
 
   useEffect(() => {
