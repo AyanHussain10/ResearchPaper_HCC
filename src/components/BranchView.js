@@ -20,12 +20,14 @@ const BranchView = ({ dataMap }) => {
   return (
     <div className={styles.branchView}>
       <h2 className={styles.branchTitle}>Branch View</h2>
-      <div>{plotData.map(plot => (
-        <div key={plot.time} className={styles.branchHeight}>
-          <h3>{plot.time} Height</h3>
-          <HeightGraph data={plot.data} />
-        </div>
-      ))}</div>
+      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+        {plotData.map(plot => (
+          <div key={plot.time} className={styles.branchHeight}>
+            <h3>{plot.time} Height</h3>
+            <HeightGraph data={plot.data} />
+          </div>
+        ))}
+      </div>
       
 
       <div className={styles.branchSpread}>
