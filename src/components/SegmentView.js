@@ -4,8 +4,8 @@ import RadarChartComponent from './RadarChartComponent';
 
 const colorMapping = {
   'KIT x HDNT':  ['#FF6347', '#FF2400', '#B21800'],
-  'HC5 x HDNT': ['#6699CC', '#0047AB', '#002D6F'],
-  'KIT x CONTROL': ['#80D641', '#4CBB17', '#347C0E'],
+  'KIT x CONTROL': ['#6699CC', '#0047AB', '#002D6F'],
+  'HC5 x HDNT': ['#80D641', '#4CBB17', '#347C0E'],
   'HC5 x CONTROL': ['#FFD700', '#FFBF00', '#B18904'],
   'HO1 x HDNT': ['#D783FF', '#8F00FF', '#5C00CC'],
   'HO1 x CONTROL': ['#8FEBEB', '#40E0D0', '#287C7D'],
@@ -65,8 +65,8 @@ const SegmentView = ({ dataUrls }) => {
 
   const colorMapping = {
     'KIT x HDNT':  ['#FF6347', '#FF2400', '#B21800'],
-    'HC5 x HDNT': ['#6699CC', '#0047AB', '#002D6F'],
-    'KIT x CONTROL': ['#80D641', '#4CBB17', '#347C0E'],
+    'KIT x CONTROL': ['#6699CC', '#0047AB', '#002D6F'],
+    'HC5 x HDNT': ['#80D641', '#4CBB17', '#347C0E'],
     'HC5 x CONTROL': ['#FFD700', '#FFBF00', '#B18904'],
     'HO1 x HDNT': ['#D783FF', '#8F00FF', '#5C00CC'],
     'HO1 x CONTROL': ['#8FEBEB', '#40E0D0', '#287C7D'],
