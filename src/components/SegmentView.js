@@ -78,14 +78,8 @@ const SegmentView = ({ dataUrls }) => {
 
   const [chartsData, setChartsData] = useState([]);
   
-  // chartsData.forEach(function(element, index) {
-  //   console.log(index, element);
-  //   console.log("********");
-  // });
-  
   useEffect(() => {
     dataUrls.forEach(url => {
-      console.log(url);
       fetch(`/data/${url}`)
         .then(response => response.json())
         .then(data => {
@@ -113,11 +107,6 @@ const SegmentView = ({ dataUrls }) => {
         .catch(error => console.error('Error fetching data:', error));
     });
   }, [dataUrls]);
-  
-  // chartsData.forEach((chartData, index) => {
-  //   console.log("********")
-  //   console.log(chartData)   
-  // })
   
   return (
     <div className={styles.segmentView}>

@@ -178,9 +178,7 @@ function RadarChart(container, data, color, options){
 const RadarChartComponent = ({ data, color }) => {
   // Create a ref for the D3 container
   const d3Container = useRef(null);
-  console.log("********************");
-  console.log(color);
-
+  
   useEffect(() => {
     if (data && d3Container.current) {
       // Call the RadarChart function to create the chart
