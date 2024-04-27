@@ -1,77 +1,62 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import styles from '../styles/HeightGraph.module.css';
+import styles from '../styles/HeightGraph.module.css'; // Adjust the path as needed
 
 const HeightGraph = ({ data }) => {
-  console.log(data)
-  const d3Container = useRef(null);
+    const d3Container = useRef(null);
 
-  useEffect(() => {
-    if (data && d3Container.current) {
-      const margin = { top: 20, right: 5, bottom: 30, left: 40 },
-            width = 600 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
+    useEffect(() => {
+        if (data && d3Container.current) {
+            const margin = { top: 20, right: 5, bottom: 20, left: 5 },
+                  width = 110 - margin.left - margin.right,
+                  height = 460 - margin.top - margin.bottom;
 
-      const svg = d3.select(d3Container.current)
-          .html('')
-          .append('svg')
-          .attr('width', width + margin.left + margin.right)
-          .attr('height', height + margin.top + margin.bottom)
-          .append('g')
-          .attr('transform', `translate(${margin.left}, ${margin.top})`);
+            const svg = d3.select(d3Container.current)
+                .html('')
+                .append('svg')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-      const x = d3.scaleBand()
-          .domain(data.map(d => d.category))
-          .range([0, width])
-          .padding(0.1);
+            const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-      const y = d3.scaleLinear()
-          .domain([0, d3.max(data, d => d3.max(d.values))])
-          .nice()
-          .range([height, 0]);
+            const x = d3.scaleBand()
+                .domain(data.map(d => d.category))
+                .range([0, width])
+                .padding(0.1);
 
-      svg.append('g')
-         .call(d3.axisLeft(y));
+            // Ensure y scale accounts for the full range of data
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(data.flatMap(d => d.values))]) // Correct domain to include max value
+                .range([height, 0]);
 
-      svg.append('g')
-         .attr('transform', `translate(0, ${height})`)
-         .call(d3.axisBottom(x));
+            svg.selectAll('.line')
+                .data(data)
+                .enter().append('line')
+                .attr('x1', d => x(d.category) + x.bandwidth() / 2)
+                .attr('x2', d => x(d.category) + x.bandwidth() / 2)
+                .attr('y1', 0)
+                .attr('y2', height)
+                .attr('stroke', 'darkgray')
+                .style('stroke-dasharray', '3,3');
 
-      const dotGroups = svg.selectAll('.dot-group')
-          .data(data)
-          .enter().append('g')
-          .attr('class', 'dot-group')
-          .attr('transform', d => `translate(${x(d.category) + x.bandwidth() / 2}, 0)`);
+            svg.selectAll('.dot')
+                .data(data.flatMap(d => d.values.map(value => ({ category: d.category, value }))))
+                .enter().append('circle')
+                .attr('class', 'dot')
+                .attr('cx', d => x(d.category) + x.bandwidth() / 2)
+                .attr('cy', d => y(d.value))
+                .attr('r', 5)
+                .style('fill', d => color(d.category));
+        }
+    }, [data]);
 
-      dotGroups.selectAll('.dot')
-          .data(d => d.values.map(value => ({ category: d.category, value })))
-          .enter().append('circle')
-          .attr('class', 'dot')
-          .attr('cx', 0)
-          .attr('cy', d => y(d.value))
-          .attr('r', 5)
-          .style('fill', d => d3.schemeCategory10[data.map(d => d.category).indexOf(d.category)]);
-
-      // Optional: Connect the dots with lines
-      dotGroups.each(function(d) {
-        d3.select(this).selectAll('.dot')
-          .data(d.values.map(value => ({ category: d.category, value })))
-          .enter().append('path')
-          .attr('fill', 'none')
-          .attr('stroke', 'grey')
-          .attr('d', d3.line()
-            .x(() => 0)
-            .y(d => y(d.value))
-          );
-      });
-    }
-  }, [data]);
-
-  return (
-    <div className={styles.heightGraph}>
-      <div ref={d3Container}></div>
-    </div>
-  );
+    return (
+        <div className={styles.heightGraph}>
+            <div ref={d3Container}></div>
+        </div>
+    );
 };
 
 export default HeightGraph;
