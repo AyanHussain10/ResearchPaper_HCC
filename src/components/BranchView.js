@@ -11,11 +11,14 @@ const BranchView = ({ dataMap }) => {
     Object.entries(details).flatMap(([genotype, treatments]) => (
       Object.entries(treatments).map(([treatment, value]) => ({
         category: `${time} - ${genotype} x ${treatment}`,  // Detailed category
-        time,  // Maintaining time separately if needed for separate grouping or legends
-        values: Object.values(value.branches || {}).map(branch => branch.branchHeight)
+        values: Object.values(value.branches || {}).map(branch => ({
+          subCategory: branch.branchInd,  // Assuming each branch has a branchInd identifier
+          value: branch.branchHeight      // Ensure this is correctly named and exists
+        }))
       }))
     ))
   ));
+  
   
   return (
     <div className={styles.branchView}>

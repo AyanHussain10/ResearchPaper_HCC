@@ -39,6 +39,7 @@ function App() {
           genotype: genotype,
           treatment: treatment,
           dataFetchedTime: new Date().toISOString(), // Store the time when the data was fetched
+          heights: jsonData.branch ? Object.values(jsonData.branch).map(branch => branch.branchHeight) : [],
           branches: jsonData.branch // Assume jsonData contains branch data
         };
         return newDataMap;
