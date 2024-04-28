@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DimensionSelection from './components/DimensionSelection';
 import SegmentView from './components/SegmentView';
+import SegmentViewMap from './components/SegmentViewMap';
 import BranchView from './components/BranchView';
 import './App.css';
 
@@ -19,11 +20,12 @@ function App() {
     'HC2 x CONTROL': ['#B3B300', '#808000', '#505000'],
   };
 
-  const [dataMap, setDataMap] = useState({});
-  const [dataUrls, setDataUrls] = useState([]);
+  const [dataMaps, setdataMaps] = useState({numIndex: 0});
+  // const [dataUrls, setDataUrls] = useState([]);
 
+  // let index = -1;
   const fetchChartData = (filename) => {
-    setDataUrls(prevUrls => [...prevUrls, filename]);
+    // setDataUrls(prevUrls => [...prevUrls, filename]);
 
     let parts = filename.split('_');
     let genotype = parts[0];
@@ -39,14 +41,19 @@ function App() {
       indexTime = 2;
     }
 
-    setDataMap(prevDataMap => {
-      const newDataMap = { ...prevDataMap };
-      if (!newDataMap[genoTrtComb]) {
-        newDataMap[genoTrtComb] = {
-          '4D': {}, '7D': {}, '10D': {}
+    
+    setdataMaps(prevdataMaps => {
+      const newdataMaps = { ...prevdataMaps };
+      if (!(genoTrtComb in newdataMaps)) {
+        newdataMaps["numIndex"] = prevdataMaps["numIndex"] + 1;
+        newdataMaps[genoTrtComb] = {
+          '4D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 0}, 
+          '7D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 1}, 
+          '10D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 2}
         };
       } 
-      newDataMap[genoTrtComb][timeSeq] = {
+      newdataMaps[genoTrtComb][timeSeq] = {
+        ...newdataMaps[genoTrtComb][timeSeq],
         link: filename,
         genotype: genotype,
         treatment: treatment,
@@ -54,14 +61,16 @@ function App() {
         color: colorMapping[genoTrtComb][indexTime]
       };
       
-      return newDataMap;
+      console.log(newdataMaps)
+      return newdataMaps;
     });
   };
 
   return (
     <div className="App">
       <DimensionSelection onFetchChartData={fetchChartData} />
-      <SegmentView dataUrls={dataUrls} />
+      {/* <SegmentView dataUrls={dataUrls} /> */}
+      <SegmentViewMap dataMaps={dataMaps} />
       <BranchView />
     </div>
   );

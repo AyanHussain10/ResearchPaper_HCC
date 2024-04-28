@@ -11,9 +11,9 @@ let colorRadar;
 function RadarChart(container, data, color, options){
 
     const cfg = {
-        w: 100,
-        h: 100,
-        margin: {top: 50, right: 50, bottom: 50, left: 50},
+        w: 20,
+        h: 20,
+        margin: {top: 0, right: 0, bottom: 0, left: 0},
         levels: 8,
         maxValue: 0,
         labelFactor: 1.1,
@@ -173,18 +173,20 @@ function RadarChart(container, data, color, options){
 }
 
 
-
+// data, genotype, treatment, time, color
 // Component to display the radar chart
-const RadarChartComponent = ({ data, color }) => {
+const RadarChartComponent = (props) => {
+// const RadarChartComponent = ({ data, color }) => {
   // Create a ref for the D3 container
   const d3Container = useRef(null);
-  
+//   console.log("****************************")
+//   console.log(props.data)
   useEffect(() => {
-    if (data && d3Container.current) {
+    if (props.data && d3Container.current) {
       // Call the RadarChart function to create the chart
-      RadarChart(d3Container.current, data, color);
+      RadarChart(d3Container.current, props.data, props.color);
       }
-    }, [data, color, d3Container]);
+    }, [props.data, props.color, d3Container]);
 
   return (
     <div ref={d3Container} className={styles.radarChart}></div>

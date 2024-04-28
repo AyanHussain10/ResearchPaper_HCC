@@ -45,9 +45,6 @@ const DimensionColorMapping = () => {
                   <div className={styles.dimensionColorCube}
                     style = {{backgroundColor: colorMapping[combination][index]}}>
                   </div>
-
-
-
                 </td>
               ))}
             </tr>

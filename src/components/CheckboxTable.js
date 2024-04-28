@@ -42,10 +42,12 @@ const CheckboxTable = ({ onFetchChartData }) => {
     } else {
       alert('Please select at least one option from each category.');
     }
+    console.log()
   };
 
   const handleClearClick  = () => {
-    setSelectedOptions({genotype: [], treatment: [], time: []})
+    setSelectedOptions({genotype: [], treatment: [], time: []});
+    window.location.reload();
   };
 
   return (
