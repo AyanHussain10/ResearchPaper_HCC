@@ -58,3 +58,11 @@
   font-weight: bold;
   text-anchor: middle;
 }
+
+/* Style for the lines connecting dots */
+path {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2;
+}
+
