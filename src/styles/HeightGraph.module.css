@@ -1,5 +1,60 @@
 .heightGraph {
-  grid-column: 1; /* First column */
-  grid-row: 2; /* First row */
-  border: 1px solid orange;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Style for the dots on the plot */
+.dot {
+  stroke: black;
+  stroke-width: 1px;
+}
+
+/* Style for the grid lines (horizontal lines) */
+.grid line {
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}
+
+/* Style for the axis paths (domain) */
+.axis path {
+  display: none;
+}
+
+/* Style for the axis tick lines */
+.axis line {
+  stroke: grey;
+}
+
+/* Style for the axis tick labels */
+.axis text {
+  fill: grey;
+  font-size: 0.8em;
+}
+
+/* Additional styling for the X axis to rotate labels and align */
+.x-axis text {
+  text-anchor: end;
+  transform: rotate(-65deg);
+  transform-origin: bottom right;
+}
+
+/* Style for vertical dotted lines separating categories */
+.vline {
+  stroke: grey;
+  stroke-dasharray: 2, 2;
+}
+
+/* Style for the axis titles, if you add them */
+.axis-title {
+  font-size: 1em;
+  fill: grey;
+  font-weight: bold;
+}
+
+/* Optional: Style for the chart title, if you add one */
+.chart-title {
+  font-size: 1.2em;
+  fill: black;
+  font-weight: bold;
+  text-anchor: middle;
 }
