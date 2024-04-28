@@ -19,19 +19,23 @@ const HeightGraph = ({ data }) => {
                 .append('g')
                 .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-            const color = d3.scaleOrdinal(d3.schemeCategory10);
+            // Color scale based on the unique categories
+            const color = d3.scaleOrdinal(d3.schemeCategory10)
+                .domain(data.map(d => d.category));
 
+            // X scale with time categories
             const x = d3.scaleBand()
-                .domain(data.map(d => d.category))
+                .domain(data.map(d => d.category))  // Ensure categories are your time intervals
                 .range([0, width])
                 .padding(0.1);
 
-            // Ensure y scale accounts for the full range of data
+            // Y scale based on the max value found within any given category's values
             const y = d3.scaleLinear()
-                .domain([0, d3.max(data.flatMap(d => d.values))]) // Correct domain to include max value
+                .domain([0, d3.max(data, d => d3.max(d.values))])  // Finding the max within arrays of values
                 .range([height, 0]);
 
-            svg.selectAll('.line')
+            // Draw horizontal reference lines across the graph
+            svg.selectAll('.referenceLine')
                 .data(data)
                 .enter().append('line')
                 .attr('x1', d => x(d.category) + x.bandwidth() / 2)
@@ -41,16 +45,16 @@ const HeightGraph = ({ data }) => {
                 .attr('stroke', 'darkgray')
                 .style('stroke-dasharray', '3,3');
 
+            // Draw dots for each data point
             svg.selectAll('.dot')
                 .data(data.flatMap(d => d.values.map(value => ({ category: d.category, value }))))
                 .enter().append('circle')
-                .attr('class', 'dot')
                 .attr('cx', d => x(d.category) + x.bandwidth() / 2)
                 .attr('cy', d => y(d.value))
                 .attr('r', 5)
                 .style('fill', d => color(d.category));
         }
-    }, [data]);
+    }, [data]); // Ensure the effect reruns when data changes
 
     return (
         <div className={styles.heightGraph}>
