@@ -6,27 +6,26 @@ import DayTenView from './DayTenView';
 
 
 const BranchView = ({ dataMap }) => {
-  // Convert dataMap to the required format for HeightGraph
-  const plotData = Object.entries(dataMap).map(([time, details]) => ({
-    time,
-    data: Object.entries(details).flatMap(([genotype, treatments]) =>
+  // Convert dataMap to the required format for HeightGraph using the time as the category
+  const plotData = Object.entries(dataMap).flatMap(([time, details]) => (
+    Object.entries(details).flatMap(([genotype, treatments]) => (
       Object.entries(treatments).map(([treatment, value]) => ({
-        category: `${genotype} x ${treatment}`,
-        values: [value] // Assuming value holds data in the format expected by HeightGraph
+        category: time,  // Use the time as the category
+        values: Object.values(value.branches || {}).map(branch => branch.branchHeight)
       }))
-    )
-  }));
+    ))
+  ));
   
   return (
     <div className={styles.branchView}>
       <h2 className={styles.branchTitle}>Branch View</h2>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
-        {plotData.map(plot => (
-          <div key={plot.time} className={styles.branchHeight}>
-            <h3>{plot.time} Height</h3>
-            <HeightGraph data={plot.data} />
-          </div>
-        ))}
+      {plotData.map((plot, index) => (
+        <div key={index} className={styles.branchHeight}>
+          <h3>{`${plot.category} Height`}</h3>
+          <HeightGraph data={[plot]} />
+        </div>
+      ))}
       </div>
       
 
