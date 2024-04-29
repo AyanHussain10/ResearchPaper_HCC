@@ -20,6 +20,22 @@ function App() {
     'HC2 x CONTROL': ['#B3B300', '#808000', '#505000'],
   };
 
+  // Function to transform JSON data into a suitable format for the RadarChartComponent
+  function transformDataForNone() {
+    const dataForChart = [
+      {axis: "Height", value: 0,},
+      {axis: "Volume", value: 0, },
+      {axis: "Spread", value: 0, },
+      // value: Object.keys(jsonData.branch).length / 20,
+      {axis: "Branches", value: 0, },
+      {axis: "Avg Red", value: 0, },
+      {axis: "Avg Green", value: 0, },
+      {axis: "Avg Blue", value: 0, },
+      {axis: "Vegetation Index", value: 0, },
+    ];
+    return [dataForChart]; // RadarChart expects an array of these data arrays
+  }
+
   const [dataMaps, setdataMaps] = useState({numIndex: 0});
   // const [dataUrls, setDataUrls] = useState([]);
 
@@ -47,9 +63,12 @@ function App() {
       if (!(genoTrtComb in newdataMaps)) {
         newdataMaps["numIndex"] = prevdataMaps["numIndex"] + 1;
         newdataMaps[genoTrtComb] = {
-          '4D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 0}, 
-          '7D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 1}, 
-          '10D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 2}
+          '4D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 0,
+                 color: colorMapping[genoTrtComb][0]}, 
+          '7D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 1,
+                 color: colorMapping[genoTrtComb][1]}, 
+          '10D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 2,
+                 color: colorMapping[genoTrtComb][2]}
         };
       } 
       newdataMaps[genoTrtComb][timeSeq] = {
@@ -58,7 +77,7 @@ function App() {
         genotype: genotype,
         treatment: treatment,
         time: timeSeq,
-        color: colorMapping[genoTrtComb][indexTime]
+        // color: colorMapping[genoTrtComb][indexTime]
       };
       
       console.log(newdataMaps)

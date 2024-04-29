@@ -9,7 +9,6 @@ function RadarChart(container, data, color, widthIndRadar, heightIndRadar){
   const cfg = {
       w: widthIndRadar,
       h: heightIndRadar,
-      margin: {top: 0, right: 0, bottom: 0, left: 0},
       levels: 8,
       maxValue: 1,
       labelFactor: 1,
@@ -30,21 +29,21 @@ function RadarChart(container, data, color, widthIndRadar, heightIndRadar){
   const svg = d3.select(container).append('svg')
       // .attr('width', '100%')
       // .attr('height', '100%')
-      .attr('width', cfg.w + cfg.margin.left + cfg.margin.right)
-      .attr('height', cfg.h + cfg.margin.top + cfg.margin.bottom)
+      .attr('width', cfg.w)
+      .attr('height', cfg.h)
       .append('g')
-      .attr('transform', `translate(${(cfg.w/2 + cfg.margin.left)}, ${(cfg.h/2 + cfg.margin.top)})`);
+      .attr('transform', `translate(${(cfg.w/2)}, ${(cfg.h/2)})`);
 
-
+  let maxValue = cfg.maxValue;
   //If the supplied maxValue is smaller than the actual one, replace by the max in the data
-  let maxValue = Math.max(cfg.maxValue, 
-      d3.max(data, function(i) { 
-          return d3.max(i.map(function(o){ 
-            return o.value; 
-          })); 
-      })
-    );
-  // console.log("maxValue in D3, ", maxValue)
+  // let maxValue = Math.max(cfg.maxValue, 
+  //     d3.max(data, function(i) { 
+  //         return d3.max(i.map(function(o){ 
+  //           return o.value; 
+  //         })); 
+  //     })
+  //   );
+  // console.log("data in D3, ", data)
 
   const allAxis = data[0].map((i, j) => i.axis),  //Names of each axis
       total = allAxis.length,                    //The number of different axes
@@ -171,9 +170,6 @@ function RadarChart(container, data, color, widthIndRadar, heightIndRadar){
 
 const SegementIndividualRadar = ({ chartsData }) => {
 
-  // console.log("***chartsData in SegementIndividualRadar ", chartsData);
-  // console.log("***length in SegementIndividualRadar ", chartsData.length);
-
   // const [individualData, setIndividualData] = useState([]);
   // useEffect(() => {
   //   setIndividualData(prevData => [...prevData, chartsData]);
@@ -181,26 +177,30 @@ const SegementIndividualRadar = ({ chartsData }) => {
   // console.log("***individualData ", individualData);
   // console.log("***individualData.length ", individualData.length);
 
-  const gridRefs = useRef([]);
-  gridRefs.current = Array(chartsData.length * 3).fill().map(() => React.createRef());
+  // const rowNum = chartsData["numIndex"];
+  // console.log("***rowNum in SegementIndividualRadar ", rowNum);
 
+  const gridRefs = useRef([]);
+  gridRefs.current = Array(chartsData["numIndex"]  * 3).fill().map(() => React.createRef());
+  
   useEffect(() => {
-    // console.log("   chartsData, ", chartsData);
-    Object.values(chartsData).forEach(item  => {
-      // console.log("   chartData, ", item);
-      const cellIndex = item.sampleIndex * 3 + item.dayIndex;
-      // console.log("   cellIndex, ", cellIndex);
-      const div = gridRefs.current[cellIndex].current;
-      // console.log("*******************", div);
-      if (div) {
-        const widthIndRadar = div.clientWidth;
-        // const widthIndRadar = div.getBoundingClientRect().width;
-        const heightIndRadar = widthIndRadar;
-        RadarChart(div, item.data, item.color, widthIndRadar, heightIndRadar);
+    Object.keys(chartsData).forEach(sampleKey  => {
+      if (sampleKey !== 'numIndex') {
+        Object.keys(chartsData[sampleKey]).forEach(dayKey  => {
+          const cellIndex = chartsData[sampleKey][dayKey].sampleIndex * 3 + chartsData[sampleKey][dayKey].dayIndex;
+          const div = gridRefs.current[cellIndex].current;
+          
+          if (div) {
+            const radarData = chartsData[sampleKey][dayKey]['data']
+            const widthIndRadar = div.clientWidth;
+            // const widthIndRadar = div.getBoundingClientRect().width;
+            const heightIndRadar = widthIndRadar;
+            RadarChart(div, chartsData[sampleKey][dayKey].data, chartsData[sampleKey][dayKey].color, widthIndRadar, heightIndRadar);
+          }
+        });
       }
     });
-    // });
-  }, [chartsData]);   
+  });   
   
   return (
     <div className={styles.segmentIndividualChartsGroup}>

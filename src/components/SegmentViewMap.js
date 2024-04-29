@@ -45,38 +45,98 @@ function transformDataForNone() {
 
 
 const SegmentViewMap = ({ dataMaps }) => {
+  // const [chartsData, setChartsData] = useState({});
+  // useEffect(() => {
+  //   const copyDataMaps = JSON.parse(JSON.stringify(dataMaps)); // Deep copy initial data to avoid mutation
+  //   Object.keys(copyDataMaps).forEach(sampleKey => {
+  //     Object.keys(copyDataMaps[sampleKey]).forEach(dayKey => {
+  //       if (copyDataMaps[sampleKey][dayKey].link) {
+  //         fetch(`/data/${copyDataMaps[sampleKey][dayKey].link}`)
+  //         .then(response => response.json())
+  //         .then(data => {
+  //           const radarData = transformDataForRadarChart(data);
+  //           copyDataMaps[sampleKey][dayKey]["data"] = radarData;
+  //         })
+  //         .catch(error => console.error('Error fetching data:', error));
+  //       } else {
+  //           let radarData = transformDataForNone();
+  //           copyDataMaps[sampleKey][dayKey]["data"] = radarData;
+  //       } 
+  //     });
+  //   });
+  //   setChartsData(copyDataMaps);
+  //   // console.log("!!!chartsData in Map ", chartsData);
+  // }, [dataMaps]);
 
-  const [chartsData, setChartsData] = useState([]);
+  // const [chartsData, setChartsData] = useState(dataMaps);
+  // useEffect(() => {
+  //   const copyDataMaps = { ...dataMaps };
+  //   Object.keys(copyDataMaps).forEach(sampleKey => {
+  //     Object.keys(copyDataMaps[sampleKey]).forEach(dayKey => {
+  //       if (copyDataMaps[sampleKey][dayKey].link) {
+  //         fetch(`/data/${copyDataMaps[sampleKey][dayKey].link}`)
+  //         .then(response => response.json())
+  //         .then(data => {
+  //           const radarData = transformDataForRadarChart(data);
+  //           copyDataMaps[sampleKey][dayKey] = {
+  //             ...copyDataMaps[sampleKey][dayKey],
+  //             "data": radarData
+  //           }
+  //         })
+  //         .catch(error => console.error('Error fetching data:', error));
+  //       } else {
+  //           const radarData = transformDataForNone();
+  //           copyDataMaps[sampleKey][dayKey] = {
+  //             ...copyDataMaps[sampleKey][dayKey],
+  //             "data": radarData
+  //           }
+  //       } 
+  //     });
+  //   });
+  //   setChartsData(copyDataMaps);
+  //   // console.log("!!!chartsData in Map ", chartsData);
+  // }, [dataMaps]);
 
+
+  const [chartsData, setChartsData] = useState(dataMaps);
   useEffect(() => {
-    Object.values(dataMaps).forEach(sampleObject  => {
-      Object.values(sampleObject).forEach(sampleDayObject  => {
+    setChartsData(prevData => ({...prevData, numIndex: dataMaps["numIndex"]}));
+    Object.entries(dataMaps).forEach(([sampleKey, sampleObject])  => {
+      Object.entries(sampleObject).forEach(([dayKey, sampleDayObject])  => {
         if (sampleDayObject.link) {
           fetch(`/data/${sampleDayObject.link}`)
           .then(response => response.json())
           .then(data => {
             let radarData = transformDataForRadarChart(data);
-            setChartsData(prevData => 
-              [...prevData, { data: radarData, 
-                              sampleIndex: sampleDayObject.sampleIndex,
-                              dayIndex: sampleDayObject.dayIndex,
-                              color: sampleDayObject.color }]);
-            })
+            setChartsData(prevData => ({
+              ...prevData,
+              [sampleKey]: {...prevData[sampleKey],
+                           [dayKey]: {...prevData[sampleKey][dayKey],
+                                      sampleIndex: sampleDayObject["sampleIndex"],
+                                      dayIndex: sampleDayObject["dayIndex"],
+                                      color: sampleDayObject["color"],
+                                      data: radarData}
+                            }
+            }));
+          })
           .catch(error => console.error('Error fetching data:', error));
         } else {
           let radarData = transformDataForNone();
-          setChartsData(prevData => 
-            [...prevData, { data: radarData, 
-              sampleIndex: sampleDayObject.sampleIndex,
-              dayIndex: sampleDayObject.dayIndex,
-              color: sampleDayObject.color }]);
+          setChartsData(prevData => ({
+            ...prevData, 
+            [sampleKey]: {...prevData[sampleKey], 
+                          [dayKey]: {
+                            sampleIndex: sampleDayObject["sampleIndex"],
+                            dayIndex: sampleDayObject["dayIndex"],
+                            color: sampleDayObject["color"],
+                            data: radarData
+            }}
+          }));
         }
       });
     });
-    
-  }, [dataMaps]);    
+  }, [dataMaps]);
   
-
   return (
     <div className={styles.segmentView}>
 
@@ -103,19 +163,19 @@ const SegmentViewMap = ({ dataMaps }) => {
         <div className={styles.segmentTrtDiffName}> 
           TREATMENT DIFF
         </div>
-        {chartsData.map((chartData, index) => (
+        {/* {chartsData.map((chartData, index) => (
           <RadarChartComponent key={index} 
             data={chartData.data} color={chartData.color} />
-        ))}
+        ))} */}
       </div>
       <div className={styles.segmentGenoDiff}>
         <div className={styles.segmentGenoDiffName}> 
           GENOTYPE DIFF
         </div>
-        {chartsData.map((chartData, index) => (
+        {/* {chartsData.map((chartData, index) => (
           <RadarChartComponent key={index} 
             data={chartData.data} color={chartData.color} />
-        ))}
+        ))} */}
       </div>
       
     </div>
