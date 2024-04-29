@@ -1,5 +1,5 @@
 .segmentTimeDiffChartsGroup {
-    height: 93%;
+    /* height: 93%; */
     width: 98%;
     /* margin: auto; */
     position: relative;
@@ -8,8 +8,9 @@
   }
 
 .segmentTimeDiffChartsGroupEach {
-    float: left;
-    width: 70.5%;
+    /* float: left; */
+    width: 71%;
     aspect-ratio: 1 / 1;
     border: 1px solid lightgrey;
+    border: 1px solid red;
   }

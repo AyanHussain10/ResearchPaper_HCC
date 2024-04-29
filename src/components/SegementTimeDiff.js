@@ -4,12 +4,11 @@ import styles from '../styles/SegementTimeDiff.module.css';
 import RadarChartComponent from './RadarChartComponent';
 
 
-function RadarChart(container, data, color, widthIndRadar, heightIndRadar){
+function RadarChart(container, data, colors, widthIndRadar, heightIndRadar){
 
   const cfg = {
       w: widthIndRadar,
       h: heightIndRadar,
-      margin: {top: 0, right: 0, bottom: 0, left: 0},
       levels: 8,
       maxValue: 1,
       labelFactor: 1,
@@ -18,7 +17,8 @@ function RadarChart(container, data, color, widthIndRadar, heightIndRadar){
       dotRadius: 3,
       strokeWidth: 1,
       roundStrokes: true,
-      color: d3.scaleOrdinal().range([`${color}`])
+      // color: d3.scaleOrdinal().range([`${color}`])
+      color: d3.scaleOrdinal().range(colors)
   };
 
 
@@ -30,21 +30,21 @@ function RadarChart(container, data, color, widthIndRadar, heightIndRadar){
   const svg = d3.select(container).append('svg')
       // .attr('width', '100%')
       // .attr('height', '100%')
-      .attr('width', cfg.w + cfg.margin.left + cfg.margin.right)
-      .attr('height', cfg.h + cfg.margin.top + cfg.margin.bottom)
+      .attr('width', cfg.w)
+      .attr('height', cfg.h)
       .append('g')
-      .attr('transform', `translate(${(cfg.w/2 + cfg.margin.left)}, ${(cfg.h/2 + cfg.margin.top)})`);
+      .attr('transform', `translate(${(cfg.w/2)}, ${(cfg.h/2)})`);
 
-
+  let maxValue = cfg.maxValue;
   //If the supplied maxValue is smaller than the actual one, replace by the max in the data
-  let maxValue = Math.max(cfg.maxValue, 
-      d3.max(data, function(i) { 
-          return d3.max(i.map(function(o){ 
-            return o.value; 
-          })); 
-      })
-    );
-  // console.log("maxValue in D3, ", maxValue)
+  // let maxValue = Math.max(cfg.maxValue, 
+  //     d3.max(data, function(i) { 
+  //         return d3.max(i.map(function(o){ 
+  //           return o.value; 
+  //         })); 
+  //     })
+  //   );
+  // console.log("data in D3, ", data)
 
   const allAxis = data[0].map((i, j) => i.axis),  //Names of each axis
       total = allAxis.length,                    //The number of different axes
@@ -90,6 +90,16 @@ function RadarChart(container, data, color, widthIndRadar, heightIndRadar){
       .attr("class", "line")
       .style("stroke", "white")
       .style("stroke-width", "2px");
+
+  // //Append the labels at each axis
+  // axis.append("text")
+  //     .attr("class", "legend")
+  //     .style("font-size", "15px")
+  //     .attr("text-anchor", "middle")
+  //     .attr("dy", "0.35em")
+  //     .attr("x", (d, i) => rScale(maxValue * cfg.labelFactor) * Math.cos(angleSlice * i - Math.PI / 2))
+  //     .attr("y", (d, i) => rScale(maxValue * cfg.labelFactor) * Math.sin(angleSlice * i - Math.PI / 2))
+  //     .text(d => d);
 
   // The Radar chart function assumes this shape data is in 'myData'
   const radarLine = d3.lineRadial()
@@ -151,55 +161,67 @@ function RadarChart(container, data, color, widthIndRadar, heightIndRadar){
       .on('mouseout', function() {
           tooltip.transition().duration(500).style("opacity", 0);
       });
+
+  //Wrap every label in a span tag
+  // axis.selectAll(".legend")
+  //     .call(wrap, cfg.wrapWidth);
 }
 
 
 
 const SegementTimeDiff = ({ chartsData }) => {
 
-  console.log("***chartsData in SegementTimeDiff ", chartsData);
-  console.log("***length in SegementTimeDiff ", chartsData.length);
-  const [timeDiffData, setTimeDiffData] = useState([]);
+  // console.log("***length in SegementTimeDiff ", chartsData.length);
+  // const [timeDiffData, setTimeDiffData] = useState([]);
 
-  useEffect(() => {
-    Object.values(chartsData).forEach(sampleObject  => {
-      console.log("***sampleObject in SegementTimeDiff ", sampleObject);
-      const sampleIndexName = sampleObject['sampleIndex'];
-      console.log("***sampleIndexName in SegementTimeDiff ", sampleIndexName);
-      if (!timeDiffData[sampleIndexName]) {
-        setTimeDiffData(prevData => [...prevData, 
-          {sampleIndexName: [sampleObject['data']],}
-        ]);
-      } else {
-        setTimeDiffData(prevData => [...prevData, 
-          {'data': [...prevData['data'], ...sampleObject['data']]}
-        ]);
-      }
-    });
-  }, [chartsData]); 
+  // useEffect(() => {
+  //   Object.values(chartsData).forEach(sampleObject  => {
+  //     console.log("***sampleObject in SegementTimeDiff ", sampleObject);
+  //     const sampleIndexName = sampleObject['sampleIndex'];
+  //     console.log("***sampleIndexName in SegementTimeDiff ", sampleIndexName);
+  //     if (!timeDiffData[sampleIndexName]) {
+  //       setTimeDiffData(prevData => [...prevData, 
+  //         {sampleIndexName: [sampleObject['data']],}
+  //       ]);
+  //     } else {
+  //       setTimeDiffData(prevData => [...prevData, 
+  //         {'data': [...prevData['data'], ...sampleObject['data']]}
+  //       ]);
+  //     }
+  //   });
+  // }, [chartsData]); 
 
-
-  const gridRefs = useRef([]);
-  gridRefs.current = Array(chartsData.length).fill().map(() => React.createRef());
+  const gridTimeDiffRefs = useRef([]);
+  gridTimeDiffRefs.current = Array(chartsData["numIndex"]).fill().map(() => React.createRef());
 
   useEffect(() => {
     console.log("useEffect chartsData, ", chartsData);
-    Object.values(chartsData).forEach(item  => {
-      const cellIndex = item.sampleIndex;
-      const div = gridRefs.current[cellIndex].current;
-
-      if (div) {
-        const widthIndRadar = div.clientWidth;
+    Object.keys(chartsData).forEach(sampleKey  => {
+      let result = [];
+      let colors = [];
+      var cellIndex;
+      Object.keys(chartsData[sampleKey]).forEach(dayKey  => {
+        cellIndex = chartsData[sampleKey][dayKey].sampleIndex;
+        if ((chartsData[sampleKey][dayKey].data) && 
+            Array.isArray(chartsData[sampleKey][dayKey].data)) {
+          result = result.concat(chartsData[sampleKey][dayKey].data);  // Concatenate the array
+          colors = colors.concat(chartsData[sampleKey][dayKey].color);
+        }
+      });
+      const divTimeDiff = gridTimeDiffRefs.current[cellIndex];
+      if (divTimeDiff) {
+        const widthIndRadar = divTimeDiff.current.clientWidth;
         const heightIndRadar = widthIndRadar;
-        RadarChart(div, item.data, item.color, widthIndRadar, heightIndRadar);
+        RadarChart(divTimeDiff.current, result, colors, widthIndRadar, heightIndRadar);
       }
+      // });
     });
-    // });
-  }, [chartsData]);   
-  
+  });
+  // }, [chartsData]);   
+
   return (
     <div className={styles.segmentTimeDiffChartsGroup}>
-      {gridRefs.current.map((ref, index) => (
+      {gridTimeDiffRefs.current.map((ref, index) => (
         <div key={index} 
           ref={ref} 
           className={styles.segmentTimeDiffChartsGroupEach}>

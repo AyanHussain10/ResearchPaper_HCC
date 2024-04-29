@@ -102,7 +102,9 @@ const SegmentViewMap = ({ dataMaps }) => {
   useEffect(() => {
     setChartsData(prevData => ({...prevData, numIndex: dataMaps["numIndex"]}));
     Object.entries(dataMaps).forEach(([sampleKey, sampleObject])  => {
+      setChartsData(prevData => ({...prevData}));
       Object.entries(sampleObject).forEach(([dayKey, sampleDayObject])  => {
+        console.log(sampleKey, dayKey)
         if (sampleDayObject.link) {
           fetch(`/data/${sampleDayObject.link}`)
           .then(response => response.json())
@@ -112,10 +114,10 @@ const SegmentViewMap = ({ dataMaps }) => {
               ...prevData,
               [sampleKey]: {...prevData[sampleKey],
                            [dayKey]: {...prevData[sampleKey][dayKey],
-                                      sampleIndex: sampleDayObject["sampleIndex"],
-                                      dayIndex: sampleDayObject["dayIndex"],
-                                      color: sampleDayObject["color"],
-                                      data: radarData}
+                                      "sampleIndex": sampleDayObject["sampleIndex"],
+                                      "dayIndex": sampleDayObject["dayIndex"],
+                                      "color": sampleDayObject["color"],
+                                      "data": radarData}
                             }
             }));
           })
@@ -126,10 +128,10 @@ const SegmentViewMap = ({ dataMaps }) => {
             ...prevData, 
             [sampleKey]: {...prevData[sampleKey], 
                           [dayKey]: {
-                            sampleIndex: sampleDayObject["sampleIndex"],
-                            dayIndex: sampleDayObject["dayIndex"],
-                            color: sampleDayObject["color"],
-                            data: radarData
+                            "sampleIndex": sampleDayObject["sampleIndex"],
+                            "dayIndex": sampleDayObject["dayIndex"],
+                            "color": sampleDayObject["color"],
+                            "data": radarData
             }}
           }));
         }
@@ -155,7 +157,7 @@ const SegmentViewMap = ({ dataMaps }) => {
           <div className={styles.segmentTimeDiffName}> 
             TIME DIFF
           </div>
-          {/* <SegementTimeDiff chartsData={chartsData} /> */}
+          <SegementTimeDiff chartsData={chartsData} />
         </div>
         
       </div>
