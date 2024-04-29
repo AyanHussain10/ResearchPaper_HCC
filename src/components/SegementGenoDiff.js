@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import React, { useEffect, useState, useRef, createRef } from 'react';
-import styles from '../styles/SegementTimeDiff.module.css';
+import styles from '../styles/SegementGenoDiff.module.css';
 import RadarChartComponent from './RadarChartComponent';
 
 
@@ -167,9 +167,29 @@ function RadarChart(container, data, colors, widthIndRadar, heightIndRadar){
   //     .call(wrap, cfg.wrapWidth);
 }
 
+function transformData(data) {
+  let result = {};
+  Object.keys(data).forEach(sampleKey => {
+    Object.entries(data[sampleKey]).forEach(([dayKey, dayData]) => {
+      // if (dayData.genoIndex !== undefined) {
+      const genoKey = dayData.genoIndex;
+      if (!result[genoKey]) {
+        result[genoKey] = {0: {}, 1: {}, 2:{}};
+      }
+
+      result[genoKey][dayData.dayIndex] = {
+        ...(result[genoKey][dayData.dayIndex]),
+        [dayData.treatIndex]: dayData
+      };
+      // }
+    });
+  });
+
+  return result;
+}
 
 
-const SegementTimeDiff = ({ chartsData }) => {
+const SegementGenoDiff = ({ chartsData }) => {
 
   // console.log("***length in SegementTimeDiff ", chartsData.length);
   // const [timeDiffData, setTimeDiffData] = useState([]);
@@ -191,44 +211,86 @@ const SegementTimeDiff = ({ chartsData }) => {
   //   });
   // }, [chartsData]); 
 
-  const gridTimeDiffRefs = useRef([]);
-  gridTimeDiffRefs.current = Array(chartsData["numIndex"]).fill().map(() => React.createRef());
+  // console.log("$$$$$$$$$chartsData, ", chartsData)
+  const gridGenoDiffRefs = useRef([]);
+  gridGenoDiffRefs.current = Array(5 * 3).fill().map(() => React.createRef());
 
+  const [genoChartsData, setGenoChartsData] = useState({});
   useEffect(() => {
-    // console.log("useEffect chartsData, ", chartsData);
-    Object.keys(chartsData).forEach(sampleKey  => {
-      let result = [];
-      let colors = [];
-      var cellIndex;
-      Object.keys(chartsData[sampleKey]).forEach(dayKey  => {
-        cellIndex = chartsData[sampleKey][dayKey].sampleIndex;
-        if ((chartsData[sampleKey][dayKey].data) && 
-            Array.isArray(chartsData[sampleKey][dayKey].data)) {
-          result = result.concat(chartsData[sampleKey][dayKey].data);  // Concatenate the array
-          colors = colors.concat(chartsData[sampleKey][dayKey].color);
+    const newData = transformData(chartsData);
+    setGenoChartsData(newData);
+    console.log("     genoChartsData, ", genoChartsData)
+
+    Object.keys(genoChartsData).forEach(genoKey  => {
+      // let result = [];
+      // let colors = [];
+      // var cellIndex;
+      Object.keys(genoChartsData[genoKey]).forEach(dayKey  => {
+        let result = [];
+        let colors = [];
+        var cellIndex;
+        
+        Object.keys(genoChartsData[genoKey][dayKey]).forEach(trtKey  => {
+          console.log("     trtKey in GenoDiff, ", genoChartsData[genoKey][dayKey][trtKey])
+          let cellIndexRow = genoChartsData[genoKey][dayKey][trtKey].genoIndex;
+          let cellIndexCol = genoChartsData[genoKey][dayKey][trtKey].dayIndex;
+          cellIndex = cellIndexRow * 3 + cellIndexCol;
+          console.log("genoChartsData[genoKey][dayKey][trtKey].data, ", 
+            genoChartsData[genoKey][dayKey][trtKey].data)
+          if ((genoChartsData[genoKey][dayKey][trtKey].data) && 
+              Array.isArray(genoChartsData[genoKey][dayKey][trtKey].data)) {
+            result = result.concat(genoChartsData[genoKey][dayKey][trtKey].data);  // Concatenate the array
+            colors = colors.concat(genoChartsData[genoKey][dayKey][trtKey].color);
+          }
+          console.log("result", result)
+        });
+        const divGenoDiff = gridGenoDiffRefs.current[cellIndex];
+        if (divGenoDiff) {
+          const widthIndRadar = divGenoDiff.current.clientWidth;
+          const heightIndRadar = widthIndRadar;
+          RadarChart(divGenoDiff.current, result, colors, widthIndRadar, heightIndRadar);
         }
+        // });
       });
-      const divTimeDiff = gridTimeDiffRefs.current[cellIndex];
-      if (divTimeDiff) {
-        const widthIndRadar = divTimeDiff.current.clientWidth;
-        const heightIndRadar = widthIndRadar;
-        RadarChart(divTimeDiff.current, result, colors, widthIndRadar, heightIndRadar);
-      }
-      // });
     });
+
+  // }, [chartsData]);
   });
-  // }, [chartsData]);   
 
   return (
-    <div className={styles.segmentTimeDiffChartsGroup}>
-      {gridTimeDiffRefs.current.map((ref, index) => (
-        <div key={index} 
-          ref={ref} 
-          className={styles.segmentTimeDiffChartsGroupEach}>
+    <div className={styles.segmentGenoDiffChartsTitleGroup}>
+      <div className={styles.segmentGenoDiffChartsGroup}>
+        {gridGenoDiffRefs.current.map((ref, index) => (
+          <div key={index} 
+            ref={ref} 
+            className={styles.segmentGenoDiffChartsGroupEach}>
+          </div>
+        ))}
+      </div>
+      <div className={styles.segmentGenoDiffTitle}>
+        <div className={styles.segmentGenoDiffTitleEach}> 
+          <div className={styles.segmentGenoDiffTitleFont}>KIT </div>
         </div>
-      ))}
+
+        <div className={styles.segmentGenoDiffTitleEach}> 
+          <div className={styles.segmentGenoDiffTitleFont}>HO1 </div>
+        </div>
+
+        <div className={styles.segmentGenoDiffTitleEach}> 
+          <div className={styles.segmentGenoDiffTitleFont}>HO2 </div>
+        </div>
+
+        <div className={styles.segmentGenoDiffTitleEach}> 
+          <div className={styles.segmentGenoDiffTitleFont}>HC2 </div>
+        </div>
+        
+        <div className={styles.segmentGenoDiffTitleEach}> 
+          <div className={styles.segmentGenoDiffTitleFont}>HC5 </div>
+        </div>
+
+      </div>
     </div>   
   );
 };
 
-export default SegementTimeDiff;
+export default SegementGenoDiff;

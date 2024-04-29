@@ -48,6 +48,52 @@ function App() {
     let treatment = parts[1] === 'H' ? 'HDNT' : 'CONTROL';
     let genoTrtComb = `${genotype} x ${treatment}`;
     let timeSeq = parts[2];
+    
+    let indexGeno;
+    if (genotype === "KIT") {
+      indexGeno = 'KIT';
+    } else if (genotype === "HO1") {
+      indexGeno = 'HO1';
+    } else if (genotype === "HO2") {
+      indexGeno = 'HO2';
+    } else if (genotype === "HC2") {
+      indexGeno = 'HC2';
+    } else if (genotype === "HC5") {
+      indexGeno = 'HC5';
+    } else {
+      indexGeno = 5;
+    }
+    if (genotype === "KIT") {
+      indexGeno = 0;
+    } else if (genotype === "HO1") {
+      indexGeno = 1;
+    } else if (genotype === "HO2") {
+      indexGeno = 2;
+    } else if (genotype === "HC2") {
+      indexGeno = 3;
+    } else if (genotype === "HC5") {
+      indexGeno = 4;
+    } else {
+      indexGeno = 5;
+    }
+    
+    
+    let indexTrt;
+    if (treatment === "CONTROL") {
+      indexTrt = 'CONTROL';
+    } else if (treatment === "HDNT") {
+      indexTrt = 'HDNT';
+    } else {
+      indexTrt = 2;
+    }
+    if (treatment === "CONTROL") {
+      indexTrt = 0;
+    } else if (treatment === "HDNT") {
+      indexTrt = 1;
+    } else {
+      indexTrt = 2;
+    }
+
     let indexTime;
     if (timeSeq === "4D") {
       indexTime = 0;
@@ -63,19 +109,26 @@ function App() {
       if (!(genoTrtComb in newdataMaps)) {
         newdataMaps["numIndex"] = prevdataMaps["numIndex"] + 1;
         newdataMaps[genoTrtComb] = {
-          '4D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 0,
+          '4D': {sampleIndex: prevdataMaps["numIndex"], 
+                 genoIndex: indexGeno,
+                 treatIndex: indexTrt,
+                 dayIndex: 0,
                  color: colorMapping[genoTrtComb][0]}, 
-          '7D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 1,
+          '7D': {sampleIndex: prevdataMaps["numIndex"], 
+                 genoIndex: indexGeno,
+                 treatIndex: indexTrt,
+                 dayIndex: 1,
                  color: colorMapping[genoTrtComb][1]}, 
-          '10D': {sampleIndex: prevdataMaps["numIndex"], dayIndex: 2,
+          '10D': {sampleIndex: prevdataMaps["numIndex"], 
+                 genoIndex: indexGeno,
+                 treatIndex: indexTrt,
+                 dayIndex: 2,
                  color: colorMapping[genoTrtComb][2]}
         };
       } 
       newdataMaps[genoTrtComb][timeSeq] = {
         ...newdataMaps[genoTrtComb][timeSeq],
         link: filename,
-        genotype: genotype,
-        treatment: treatment,
         time: timeSeq,
         // color: colorMapping[genoTrtComb][indexTime]
       };

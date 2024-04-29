@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import React, { useEffect, useState, useRef, createRef } from 'react';
-import styles from '../styles/SegementTimeDiff.module.css';
+import styles from '../styles/SegementGenoDiff.module.css';
 import RadarChartComponent from './RadarChartComponent';
 
 
@@ -167,68 +167,91 @@ function RadarChart(container, data, colors, widthIndRadar, heightIndRadar){
   //     .call(wrap, cfg.wrapWidth);
 }
 
-
-
-const SegementTimeDiff = ({ chartsData }) => {
-
-  // console.log("***length in SegementTimeDiff ", chartsData.length);
-  // const [timeDiffData, setTimeDiffData] = useState([]);
-
-  // useEffect(() => {
-  //   Object.values(chartsData).forEach(sampleObject  => {
-  //     console.log("***sampleObject in SegementTimeDiff ", sampleObject);
-  //     const sampleIndexName = sampleObject['sampleIndex'];
-  //     console.log("***sampleIndexName in SegementTimeDiff ", sampleIndexName);
-  //     if (!timeDiffData[sampleIndexName]) {
-  //       setTimeDiffData(prevData => [...prevData, 
-  //         {sampleIndexName: [sampleObject['data']],}
-  //       ]);
-  //     } else {
-  //       setTimeDiffData(prevData => [...prevData, 
-  //         {'data': [...prevData['data'], ...sampleObject['data']]}
-  //       ]);
-  //     }
-  //   });
-  // }, [chartsData]); 
-
-  const gridTimeDiffRefs = useRef([]);
-  gridTimeDiffRefs.current = Array(chartsData["numIndex"]).fill().map(() => React.createRef());
-
-  useEffect(() => {
-    // console.log("useEffect chartsData, ", chartsData);
-    Object.keys(chartsData).forEach(sampleKey  => {
-      let result = [];
-      let colors = [];
-      var cellIndex;
-      Object.keys(chartsData[sampleKey]).forEach(dayKey  => {
-        cellIndex = chartsData[sampleKey][dayKey].sampleIndex;
-        if ((chartsData[sampleKey][dayKey].data) && 
-            Array.isArray(chartsData[sampleKey][dayKey].data)) {
-          result = result.concat(chartsData[sampleKey][dayKey].data);  // Concatenate the array
-          colors = colors.concat(chartsData[sampleKey][dayKey].color);
-        }
-      });
-      const divTimeDiff = gridTimeDiffRefs.current[cellIndex];
-      if (divTimeDiff) {
-        const widthIndRadar = divTimeDiff.current.clientWidth;
-        const heightIndRadar = widthIndRadar;
-        RadarChart(divTimeDiff.current, result, colors, widthIndRadar, heightIndRadar);
+function transformTrtData(data) {
+  let result = {};
+  Object.keys(data).forEach(sampleKey => {
+    Object.entries(data[sampleKey]).forEach(([dayKey, dayData]) => {
+      // if (dayData.genoIndex !== undefined) {
+      const trtKey = dayData.treatIndex;
+      if (!result[trtKey]) {
+        result[trtKey] = {0: {}, 1: {}, 2:{}};
       }
-      // });
+
+      result[trtKey][dayData.dayIndex] = {
+        ...(result[trtKey][dayData.dayIndex]),
+        [dayData.genoIndex]: dayData
+      };
+      // }
     });
   });
-  // }, [chartsData]);   
+
+  return result;
+}
+
+
+const SegementTrtDiff = ({ chartsData }) => {
+
+  // console.log("$$$$$$$$$chartsData, ", chartsData)
+  const gridTrtDiffRefs = useRef([]);
+  gridTrtDiffRefs.current = Array(2 * 3).fill().map(() => React.createRef());
+
+  const [trtChartsData, setTrtChartsData] = useState({});
+  useEffect(() => {
+    const newData = transformTrtData(chartsData);
+    setTrtChartsData(newData);
+    console.log("     trtChartsData, ", trtChartsData)
+
+    Object.keys(trtChartsData).forEach(trtKey  => {
+      Object.keys(trtChartsData[trtKey]).forEach(dayKey  => {
+        let result = [];
+        let colors = [];
+        var cellIndex;
+        Object.keys(trtChartsData[trtKey][dayKey]).forEach(genoKey  => {
+    //       console.log("     trtKey in GenoDiff, ", trtChartsData[genoKey][dayKey][trtKey])
+          let cellIndexRow = trtChartsData[trtKey][dayKey][genoKey].treatIndex;
+          let cellIndexCol = trtChartsData[trtKey][dayKey][genoKey].dayIndex;
+          cellIndex = cellIndexRow * 3 + cellIndexCol;
+    //       console.log("trtChartsData[genoKey][dayKey][trtKey].data, ", 
+    //         trtChartsData[genoKey][dayKey][trtKey].data)
+          if ((trtChartsData[trtKey][dayKey][genoKey].data) && 
+              Array.isArray(trtChartsData[trtKey][dayKey][genoKey].data)) {
+            result = result.concat(trtChartsData[trtKey][dayKey][genoKey].data);  // Concatenate the array
+            colors = colors.concat(trtChartsData[trtKey][dayKey][genoKey].color);
+          }
+        });
+        const divTrtDiff = gridTrtDiffRefs.current[cellIndex];
+        if (divTrtDiff) {
+          const widthIndRadar = divTrtDiff.current.clientWidth;
+          const heightIndRadar = widthIndRadar;
+          RadarChart(divTrtDiff.current, result, colors, widthIndRadar, heightIndRadar);
+        }
+      });
+    });
+
+  // }, [chartsData]);
+  });
 
   return (
-    <div className={styles.segmentTimeDiffChartsGroup}>
-      {gridTimeDiffRefs.current.map((ref, index) => (
-        <div key={index} 
-          ref={ref} 
-          className={styles.segmentTimeDiffChartsGroupEach}>
+    <div className={styles.segmentGenoDiffChartsTitleGroup}>
+      <div className={styles.segmentGenoDiffChartsGroup}>
+        {gridTrtDiffRefs.current.map((ref, index) => (
+          <div key={index} 
+            ref={ref} 
+            className={styles.segmentGenoDiffChartsGroupEach}>
+          </div>
+        ))}
+      </div>
+      <div className={styles.segmentGenoDiffTitle}>
+        <div className={styles.segmentGenoDiffTitleEach}> 
+          <div className={styles.segmentGenoDiffTitleFont}>CONTROL </div>
         </div>
-      ))}
+
+        <div className={styles.segmentGenoDiffTitleEach}> 
+          <div className={styles.segmentGenoDiffTitleFont}>HDNT </div>
+        </div>
+      </div>
     </div>   
   );
 };
 
-export default SegementTimeDiff;
+export default SegementTrtDiff;

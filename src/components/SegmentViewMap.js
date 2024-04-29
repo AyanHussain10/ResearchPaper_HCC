@@ -3,6 +3,8 @@ import styles from '../styles/SegmentView.module.css';
 import RadarChartComponent from './RadarChartComponent';
 import SegementIndividualRadar from './SegementIndividualRadar';
 import SegementTimeDiff from './SegementTimeDiff';
+import SegementGenoDiff from './SegementGenoDiff';
+import SegementTrtDiff from './SegementTrtDiff';
 
 
 // Function to calculate the user-defined vegetation index
@@ -110,10 +112,17 @@ const SegmentViewMap = ({ dataMaps }) => {
           .then(response => response.json())
           .then(data => {
             let radarData = transformDataForRadarChart(data);
+            console.log("************ sampleKey, dayKey *************")
+            console.log(sampleKey, dayKey)
+            console.log(chartsData)
             setChartsData(prevData => ({
               ...prevData,
-              [sampleKey]: {...prevData[sampleKey],
-                           [dayKey]: {...prevData[sampleKey][dayKey],
+              [sampleKey]: {
+                            ...prevData[sampleKey],
+                           [dayKey]: {
+                                      // ...prevData[sampleKey][dayKey],
+                                      "genoIndex": sampleDayObject["genoIndex"],
+                                      "treatIndex": sampleDayObject["treatIndex"],
                                       "sampleIndex": sampleDayObject["sampleIndex"],
                                       "dayIndex": sampleDayObject["dayIndex"],
                                       "color": sampleDayObject["color"],
@@ -128,6 +137,8 @@ const SegmentViewMap = ({ dataMaps }) => {
             ...prevData, 
             [sampleKey]: {...prevData[sampleKey], 
                           [dayKey]: {
+                            "genoIndex": sampleDayObject["genoIndex"],
+                            "treatIndex": sampleDayObject["treatIndex"],
                             "sampleIndex": sampleDayObject["sampleIndex"],
                             "dayIndex": sampleDayObject["dayIndex"],
                             "color": sampleDayObject["color"],
@@ -165,19 +176,14 @@ const SegmentViewMap = ({ dataMaps }) => {
         <div className={styles.segmentTrtDiffName}> 
           TREATMENT DIFF
         </div>
-        {/* {chartsData.map((chartData, index) => (
-          <RadarChartComponent key={index} 
-            data={chartData.data} color={chartData.color} />
-        ))} */}
+        <SegementTrtDiff chartsData={chartsData} />
       </div>
+
       <div className={styles.segmentGenoDiff}>
         <div className={styles.segmentGenoDiffName}> 
           GENOTYPE DIFF
         </div>
-        {/* {chartsData.map((chartData, index) => (
-          <RadarChartComponent key={index} 
-            data={chartData.data} color={chartData.color} />
-        ))} */}
+        <SegementGenoDiff chartsData={chartsData} />
       </div>
       
     </div>
