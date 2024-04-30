@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ForceGraph3D } from 'react-force-graph';
 import * as THREE from 'three';
 import SpriteText from 'three-spritetext';
-import styles from '../styles/DayTenView.module.css';
+import styles from '../styles/BranchDay10GraphView.module.css';
 
-const DayTenView = ( {chartsBranchData} ) => {
+const BranchDay10GraphView = ( {chartsBranchData} ) => {
 
   // const gridDay10GraphRefs = useRef([]);
   // gridDay10GraphRefs.current = Array(Object.keys(chartsBranchData).length).fill().map(() => React.createRef());
@@ -119,7 +119,7 @@ const DayTenView = ( {chartsBranchData} ) => {
   );
 };
 
-export default DayTenView;
+export default BranchDay10GraphView;
 
 
 

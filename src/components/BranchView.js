@@ -1,7 +1,7 @@
 import styles from '../styles/BranchView.module.css';
 import HeightGraph from './HeightGraph';
 import SpreadOfBranchesGraph from './SpreadOfBranchesGraph';
-import DayTenView from './DayTenView';
+import BranchDay10GraphView from './BranchDay10GraphView';
 import React, { useEffect, useState } from 'react';
 
 // Function to transform JSON data into a suitable format for the RadarChartComponent
@@ -123,9 +123,7 @@ const BranchView = ({ dataMaps }) => {
         <div className={styles.dayTenViewName}> 
           Day 10 View
         </div>
-        {/* <div className={styles.dayTenViewPlot}> */}
-        <DayTenView chartsBranchData={chartsBranchData} />
-        {/* </div> */}
+        <BranchDay10GraphView chartsBranchData={chartsBranchData} />
       </div>
 
       {/* Insert additional components for the branch view */}
