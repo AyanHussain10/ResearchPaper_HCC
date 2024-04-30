@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../styles/HeightGraph.module.css';
+// import styles from '../styles/HeightGraph.module.css';
 
 const HeightGraph = () => {
   // The chart logic will go here

@@ -254,8 +254,9 @@ const SegementGenoDiff = ({ chartsData }) => {
       });
     });
 
-  // }, [chartsData]);
-  });
+  }, [chartsData]);
+  // }, []);
+  // });
 
   return (
     <div className={styles.segmentGenoDiffChartsTitleGroup}>

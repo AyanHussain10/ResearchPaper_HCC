@@ -227,9 +227,9 @@ const SegementTrtDiff = ({ chartsData }) => {
         }
       });
     });
-
-  // }, [chartsData]);
-  });
+  }, [chartsData]);
+  // }, []);
+  // });
 
   return (
     <div className={styles.segmentGenoDiffChartsTitleGroup}>

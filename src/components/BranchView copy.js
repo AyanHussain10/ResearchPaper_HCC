@@ -62,12 +62,10 @@ function transformDataForDay10Graph(jsonData) {
 const BranchView = ({ dataMaps }) => {
 
   // const [chartsBranchData, setChartsBranchData] = useState(dataMaps);
-  const [chartsBranchData, setChartsBranchData] = useState({});
+  const [chartsBranchData, setChartsBranchData] = useState(undefined);
   
   useEffect(() => {
     console.log("     dataMaps. ", dataMaps)
-    // setChartsBranchData(prevData => ({...prevData, 
-    //                                   numIndex: 0}));
     // setChartsBranchData(prevData => ({...prevData, 
     //                                   numIndex: dataMaps["numIndex"]}));
     Object.entries(dataMaps).forEach(([sampleKey, sampleObject])  => {
@@ -78,15 +76,8 @@ const BranchView = ({ dataMaps }) => {
           fetch(`/data/${sampleDayObject.link}`)
           .then(response => response.json())
           .then(data => {
-
             let day10GraphData = transformDataForDay10Graph(data);
-            // setChartsBranchData(day10GraphData);
-
-            setChartsBranchData(prevData => ({
-              ...prevData, 
-              [sampleKey]: {...dataMaps[sampleKey]["10D"],
-                            "data": day10GraphData}
-            }));
+            setChartsBranchData(day10GraphData);
           })
           .catch(error => console.error('Error fetching data:', error));
         } 
@@ -123,9 +114,9 @@ const BranchView = ({ dataMaps }) => {
         <div className={styles.dayTenViewName}> 
           Day 10 View
         </div>
-        {/* <div className={styles.dayTenViewPlot}> */}
-        <DayTenView chartsBranchData={chartsBranchData} />
-        {/* </div> */}
+        <div className={styles.dayTenViewPlot}>
+          <DayTenView chartsBranchData={chartsBranchData} />
+        </div>
       </div>
 
       {/* Insert additional components for the branch view */}
