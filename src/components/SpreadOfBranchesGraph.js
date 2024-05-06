@@ -4,7 +4,7 @@ import styles from '../styles/SpreadOfBranchesGraph.module.css';
 
 const SpreadOfBranchesGraph = ({ data, colorMapping }) => {
     const canvasRef = useRef(null);
-
+    console.log("Spread of Brnaches")
     useEffect(() => {
         console.log('Data received:', data);
         console.log('Color Mapping:', colorMapping);
