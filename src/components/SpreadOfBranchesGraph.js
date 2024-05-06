@@ -1,18 +1,47 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import Chart from 'chart.js/auto';
 import styles from '../styles/SpreadOfBranchesGraph.module.css';
-import BranchView from './BranchView';
 
+const SpreadOfBranchesGraph = ({ data, colorMapping }) => {
+    const canvasRef = useRef(null);
 
-const SpreadOfBranchesGraph = () => {
-  // The chart logic will go here
+    useEffect(() => {
+        console.log('Data received:', data);
+        console.log('Color Mapping:', colorMapping);
 
-  return (
-    console.log("branch spread")
-    // <div className={styles.spreadOfBranchesGraph}>
-      // {/* Render your spread of branches graph here */}
-      // <h1>SpreadOfBranchesGraph</h1>
-    // </div>
-  );
+        if (!canvasRef.current) return;
+        const context = canvasRef.current.getContext('2d');
+
+        // Processing the data to split into two datasets based on conditions or index
+        const labels = data.map(item => item.label);
+        const dataValues = data.map(item => item.value);
+        const backgroundColors = data.map(item => {
+            const colorIndex = labels.indexOf(item.label) % 2 === 0 ? 0 : 1; // Example condition to alternate colors
+            return colorMapping[item.label] ? colorMapping[item.label][colorIndex] : '#FFFFFF'; // Fallback color if undefined
+        });
+
+        const datasets = [{
+            label: 'Spread of Branches',
+            data: dataValues,
+            backgroundColor: backgroundColors
+        }];
+
+        const chart = new Chart(context, {
+            type: 'bar',
+            data: { labels, datasets },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        return () => chart.destroy();
+    }, [data, colorMapping]);
+
+    return <canvas ref={canvasRef} className={styles.spreadOfBranchesGraph}></canvas>;
 };
 
 export default SpreadOfBranchesGraph;

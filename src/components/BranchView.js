@@ -59,13 +59,16 @@ function transformDataForDay10Graph(jsonData) {
 
 
 
-const BranchView = ({ dataMaps }) => {
+const BranchView = ({ dataMaps, colorMapping }) => {
 
   // const [chartsBranchData, setChartsBranchData] = useState(dataMaps);
   const [chartsBranchData, setChartsBranchData] = useState({});
+  const [spreadData, setSpreadData] = useState([]);
   
   useEffect(() => {
     console.log("     dataMaps. ", dataMaps)
+    const fetchedData = [12, 19, 3, 5, 2, 3, 10, 15, 20, 12, 25, 30]; // Sample data
+    setSpreadData(fetchedData);
     // setChartsBranchData(prevData => ({...prevData, 
     //                                   numIndex: 0}));
     // setChartsBranchData(prevData => ({...prevData, 
@@ -115,7 +118,7 @@ const BranchView = ({ dataMaps }) => {
           Branch Spread
         </div>
         <div className={styles.branchSpreadPlot}>
-          <SpreadOfBranchesGraph />
+        <SpreadOfBranchesGraph data={spreadData} colorMapping={colorMapping} />
         </div>
       </div>
 

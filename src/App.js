@@ -143,7 +143,7 @@ function App() {
       <DimensionSelection onFetchChartData={fetchChartData} />
       {/* <SegmentView dataUrls={dataUrls} /> */}
       <SegmentViewMap dataMaps={dataMaps} />
-      <BranchView dataMaps={dataMaps}/>
+      <BranchView dataMaps={dataMaps} colorMapping={colorMapping}/>
     </div>
   );
 }
