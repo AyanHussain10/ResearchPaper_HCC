@@ -4,26 +4,24 @@ import styles from '../styles/SpreadOfBranchesGraph.module.css';
 
 const SpreadOfBranchesGraph = ({ data, colorMapping }) => {
     const canvasRef = useRef(null);
-    console.log("Spread of Brnaches")
-    useEffect(() => {
-        console.log('Data received:', data);
-        console.log('Color Mapping:', colorMapping);
 
+    useEffect(() => {
         if (!canvasRef.current) return;
         const context = canvasRef.current.getContext('2d');
 
-        // Processing the data to split into two datasets based on conditions or index
-        const labels = data.map(item => item.label);
-        const dataValues = data.map(item => item.value);
-        const backgroundColors = data.map(item => {
-            const colorIndex = labels.indexOf(item.label) % 2 === 0 ? 0 : 1; // Example condition to alternate colors
-            return colorMapping[item.label] ? colorMapping[item.label][colorIndex] : '#FFFFFF'; // Fallback color if undefined
-        });
+        // Assuming data is structured correctly
+        const labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]; // Labels for each group
+        const redData = [20, 30, 45, 60, 20, 65, 75, 85, 95, 100, 60, 80]; // Example data for red bars
+        const greenData = [15, 25, 35, 45, 55, 20, 40, 60, 80, 90, 70, 50]; // Example data for green bars
 
         const datasets = [{
-            label: 'Spread of Branches',
-            data: dataValues,
-            backgroundColor: backgroundColors
+            label: 'Red Data',
+            data: redData,
+            backgroundColor: 'red'
+        }, {
+            label: 'Green Data',
+            data: greenData,
+            backgroundColor: 'green'
         }];
 
         const chart = new Chart(context, {
@@ -31,6 +29,9 @@ const SpreadOfBranchesGraph = ({ data, colorMapping }) => {
             data: { labels, datasets },
             options: {
                 scales: {
+                    x: {
+                        stacked: true
+                    },
                     y: {
                         beginAtZero: true
                     }
@@ -39,7 +40,7 @@ const SpreadOfBranchesGraph = ({ data, colorMapping }) => {
         });
 
         return () => chart.destroy();
-    }, [data, colorMapping]);
+    }, [data]); // Removed colorMapping from dependencies as it's not used directly
 
     return <canvas ref={canvasRef} className={styles.spreadOfBranchesGraph}></canvas>;
 };
