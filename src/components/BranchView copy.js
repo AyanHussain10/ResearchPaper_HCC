@@ -1,7 +1,8 @@
 import styles from '../styles/BranchView.module.css';
 import HeightGraph from './HeightGraph';
 import SpreadOfBranchesGraph from './SpreadOfBranchesGraph';
-import DayTenView from './DayTenView';
+import BranchDay10GraphView from './BranchDay10GraphView';
+import BranchDay10PCView from './BranchDay10PCView';
 import React, { useEffect, useState } from 'react';
 
 // Function to transform JSON data into a suitable format for the RadarChartComponent
@@ -62,10 +63,12 @@ function transformDataForDay10Graph(jsonData) {
 const BranchView = ({ dataMaps }) => {
 
   // const [chartsBranchData, setChartsBranchData] = useState(dataMaps);
-  const [chartsBranchData, setChartsBranchData] = useState(undefined);
+  const [chartsBranchData, setChartsBranchData] = useState({});
   
   useEffect(() => {
     console.log("     dataMaps. ", dataMaps)
+    // setChartsBranchData(prevData => ({...prevData, 
+    //                                   numIndex: 0}));
     // setChartsBranchData(prevData => ({...prevData, 
     //                                   numIndex: dataMaps["numIndex"]}));
     Object.entries(dataMaps).forEach(([sampleKey, sampleObject])  => {
@@ -76,8 +79,15 @@ const BranchView = ({ dataMaps }) => {
           fetch(`/data/${sampleDayObject.link}`)
           .then(response => response.json())
           .then(data => {
+
             let day10GraphData = transformDataForDay10Graph(data);
-            setChartsBranchData(day10GraphData);
+            // setChartsBranchData(day10GraphData);
+
+            setChartsBranchData(prevData => ({
+              ...prevData, 
+              [sampleKey]: {...dataMaps[sampleKey]["10D"],
+                            "data": day10GraphData}
+            }));
           })
           .catch(error => console.error('Error fetching data:', error));
         } 
@@ -114,8 +124,9 @@ const BranchView = ({ dataMaps }) => {
         <div className={styles.dayTenViewName}> 
           Day 10 View
         </div>
-        <div className={styles.dayTenViewPlot}>
-          <DayTenView chartsBranchData={chartsBranchData} />
+        <div className={styles.dayTenViewContent}> 
+          <BranchDay10GraphView chartsBranchData={chartsBranchData} />
+          <BranchDay10PCView chartsBranchData={chartsBranchData} />
         </div>
       </div>
 

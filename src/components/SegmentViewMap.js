@@ -102,7 +102,7 @@ const SegmentViewMap = ({ dataMaps }) => {
 
   const [chartsData, setChartsData] = useState(dataMaps);
   useEffect(() => {
-    console.log(dataMaps)
+    console.log("dataMaps, ", dataMaps)
     setChartsData(prevData => ({...prevData, numIndex: dataMaps["numIndex"]}));
     Object.entries(dataMaps).forEach(([sampleKey, sampleObject])  => {
       setChartsData(prevData => ({...prevData}));

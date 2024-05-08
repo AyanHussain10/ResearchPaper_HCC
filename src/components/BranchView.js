@@ -2,6 +2,8 @@ import styles from '../styles/BranchView.module.css';
 import HeightGraph from './HeightGraph';
 import SpreadOfBranchesGraph from './SpreadOfBranchesGraph';
 import BranchDay10GraphView from './BranchDay10GraphView';
+import BranchDay10PCSelect from './BranchDay10PCSelect'
+import BranchDay10PCView from './BranchDay10PCView';
 import React, { useEffect, useState } from 'react';
 
 // Function to transform JSON data into a suitable format for the RadarChartComponent
@@ -12,24 +14,22 @@ function transformDataForDay10Graph(jsonData) {
   let lastBranchId = 'branch_0_end';
   for (let i = 0; i < jsonData.branch.noBranches; i++) {
     let branchTopId = 'branch_' + i;
-    // console.log('console.log(jsonData["branch10Day"]["branchInd_" + i]["branchUpperPos"][0])')
-    // console.log(jsonData["branch10Day"]["branchInd_" + i]["branchUpperPos"])
     let eachBranchTop = {
       "id": branchTopId + '_top', 
       "name": branchTopId,
       "color": "darkgreen",
-      "x": jsonData["branch10Day"]["branchInd_" + i]["branchUpperPos"][1]  * 1.5,
-      "y": (jsonData["branch10Day"]["branchInd_" + i]["branchUpperPos"][2] - 120 )  * 1.5,
-      "z": jsonData["branch10Day"]["branchInd_" + i]["branchUpperPos"][0]  * 1.5};
+      "x": (jsonData["branch10Day"]["branchInd_" + i]["branchUpperPos"][0] - 10) * 1.5,
+      "y": (jsonData["branch10Day"]["branchInd_" + i]["branchUpperPos"][2] - 100) * 1.5,
+      "z": (jsonData["branch10Day"]["branchInd_" + i]["branchUpperPos"][1])  * 1.5};
     nodes.push(eachBranchTop);
     let branchEndId = 'branch_' + i;
     let eachBranchEnd = {
       "id": branchEndId + '_end', 
       "name": branchEndId,
       "color": "darkgreen",
-      "x": jsonData["branch10Day"]["branchInd_" + i]["branchLowerPos"][1] * 1.5,
-      "y": (jsonData["branch10Day"]["branchInd_" + i]["branchLowerPos"][2]  - 120) *1.5,
-      "z": jsonData["branch10Day"]["branchInd_" + i]["branchLowerPos"][0] * 1.5};
+      "x": (jsonData["branch10Day"]["branchInd_" + i]["branchLowerPos"][0] - 10) * 1.5,
+      "y": (jsonData["branch10Day"]["branchInd_" + i]["branchLowerPos"][2] - 100) *1.5,
+      "z": (jsonData["branch10Day"]["branchInd_" + i]["branchLowerPos"][1]) * 1.5};
     nodes.push(eachBranchEnd);
     // console.log("eachBranchTop, ", eachBranchTop)
     let branch = {
@@ -85,7 +85,8 @@ const BranchView = ({ dataMaps }) => {
             setChartsBranchData(prevData => ({
               ...prevData, 
               [sampleKey]: {...dataMaps[sampleKey]["10D"],
-                            "data": day10GraphData}
+                            "data": day10GraphData,
+                            "numBranches": data["branch"]["noBranches"]}
             }));
           })
           .catch(error => console.error('Error fetching data:', error));
@@ -123,7 +124,11 @@ const BranchView = ({ dataMaps }) => {
         <div className={styles.dayTenViewName}> 
           Day 10 View
         </div>
-        <BranchDay10GraphView chartsBranchData={chartsBranchData} />
+        <div className={styles.dayTenViewContent}> 
+          {/* <BranchDay10GraphView chartsBranchData={chartsBranchData} /> */}
+          <BranchDay10PCSelect chartsBranchData={chartsBranchData}/>
+          <BranchDay10PCView chartsBranchData={chartsBranchData} />
+        </div>
       </div>
 
       {/* Insert additional components for the branch view */}
