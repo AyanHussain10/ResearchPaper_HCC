@@ -1,9 +1,7 @@
 import styles from '../styles/BranchView.module.css';
 import HeightGraph from './HeightGraph';
 import SpreadOfBranchesGraph from './SpreadOfBranchesGraph';
-import BranchDay10GraphView from './BranchDay10GraphView';
-import BranchDay10PCSelect from './BranchDay10PCSelect'
-import BranchDay10PCView from './BranchDay10PCView';
+import BranchDay10 from './BranchDay10';
 import React, { useEffect, useState } from 'react';
 
 // Function to transform JSON data into a suitable format for the RadarChartComponent
@@ -93,7 +91,6 @@ const BranchView = ({ dataMaps }) => {
         } 
       });
     });
-    console.log("!!!!!, ", chartsBranchData)
   }, [dataMaps]);
   // });
 
@@ -124,11 +121,7 @@ const BranchView = ({ dataMaps }) => {
         <div className={styles.dayTenViewName}> 
           Day 10 View
         </div>
-        <div className={styles.dayTenViewContent}> 
-          {/* <BranchDay10GraphView chartsBranchData={chartsBranchData} /> */}
-          <BranchDay10PCSelect chartsBranchData={chartsBranchData}/>
-          <BranchDay10PCView chartsBranchData={chartsBranchData} />
-        </div>
+        <BranchDay10 chartsBranchData={chartsBranchData}/>
       </div>
 
       {/* Insert additional components for the branch view */}
