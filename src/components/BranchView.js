@@ -84,7 +84,7 @@ const BranchView = ({ dataMaps, colorMapping }) => {
                           Object.entries(data.segment).forEach(([segmentKey, segmentData]) => {
                               const segmentIndex = parseInt(segmentKey.split('_')[1]);
                               redData[segmentIndex] = segmentData.maxSpreadSegVal; // Assuming the spread value for the segment is `maxSpreadSegVal`
-                              // If you have different spread values for red and green, adjust accordingly
+                              greenData[segmentIndex] = segmentData.maxSpreadSegVal * 0.75; // Adjust this calculation based on actual logic
                           });
 
                           setSpreadData({
