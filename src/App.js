@@ -37,6 +37,7 @@ function App() {
   }
 
   const [dataMaps, setdataMaps] = useState({numIndex: 0});
+  console.log(dataMaps)
   // const [dataUrls, setDataUrls] = useState([]);
 
   // let index = -1;
