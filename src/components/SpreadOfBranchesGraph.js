@@ -6,7 +6,7 @@ const SpreadOfBranchesGraph = ({ data, label }) => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
-        if (!canvasRef.current) return;
+        if (!canvasRef.current || !data || !data.labels || !data.datasets || !data.datasets[0]) return;
         const context = canvasRef.current.getContext('2d');
 
         const chart = new Chart(context, {

@@ -119,43 +119,38 @@ const BranchView = ({ dataMaps, colorMapping }) => {
     return (
         <div className={styles.branchView}>
             <h2 className={styles.branchTitle}>Branch View</h2>
+
             <div className={styles.branchHeight}>
-                <div className={styles.branchHeightName}>
-                    Branch Height
-                </div>
-                <div className={styles.branchHeightPlot}>
-                    <HeightGraph />
+                <div className={styles.branchHeightName}>Branch Height</div>
+                <div className={styles.branchHeightPlot}><HeightGraph /></div>
+            </div>
+
+            <div className={styles.branchSpread}>
+                <div className={styles.branchSpreadName}>Branch Spread (Red)</div>
+                <div className={styles.branchSpreadPlot}>
+                    {spreadRedData.labels.length > 0 && (
+                        <SpreadOfBranchesGraph data={spreadRedData} label="Red Data" />
+                    )}
                 </div>
             </div>
 
             <div className={styles.branchSpread}>
-                <div className={styles.branchSpreadName}>
-                    Branch Spread (Red)
-                </div>
+                <div className={styles.branchSpreadName}>Branch Spread (Green)</div>
                 <div className={styles.branchSpreadPlot}>
-                    <SpreadOfBranchesGraph data={spreadRedData} label="Red Data" />
-                </div>
-            </div>
-
-            <div className={styles.branchSpread}>
-                <div className={styles.branchSpreadName}>
-                    Branch Spread (Green)
-                </div>
-                <div className={styles.branchSpreadPlot}>
-                    <SpreadOfBranchesGraph data={spreadGreenData} label="Green Data" />
+                    {spreadGreenData.labels.length > 0 && (
+                        <SpreadOfBranchesGraph data={spreadGreenData} label="Green Data" />
+                    )}
                 </div>
             </div>
 
             <div className={styles.dayTenView}>
-                <div className={styles.dayTenViewName}>
-                    Day 10 View
-                </div>
+                <div className={styles.dayTenViewName}>Day 10 View</div>
                 {Object.keys(chartsBranchData).length > 0 && (
-                    <BranchDay10GraphView chartsBranchData={chartsBranchData} />
+                    <div className={styles.dayTenViewPlot}>
+                        <BranchDay10GraphView chartsBranchData={chartsBranchData} />
+                    </div>
                 )}
             </div>
-
-            {/* Insert additional components for the branch view */}
         </div>
     );
 };
