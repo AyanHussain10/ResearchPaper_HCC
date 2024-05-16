@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import styles from '../styles/SpreadOfBranchesGraph.module.css';
 
-const SpreadOfBranchesGraph = ({ data }) => {
+const SpreadOfBranchesGraph = ({ data, label }) => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
@@ -13,12 +13,16 @@ const SpreadOfBranchesGraph = ({ data }) => {
             type: 'bar',
             data: {
                 labels: data.labels,
-                datasets: data.datasets
+                datasets: [{
+                    label,
+                    data: data.datasets[0].data,
+                    backgroundColor: data.datasets[0].backgroundColor,
+                }]
             },
             options: {
                 scales: {
                     x: {
-                        stacked: true
+                        beginAtZero: true
                     },
                     y: {
                         beginAtZero: true
@@ -28,7 +32,7 @@ const SpreadOfBranchesGraph = ({ data }) => {
         });
 
         return () => chart.destroy();
-    }, [data]);
+    }, [data, label]);
 
     return <canvas ref={canvasRef} className={styles.spreadOfBranchesGraph}></canvas>;
 };
