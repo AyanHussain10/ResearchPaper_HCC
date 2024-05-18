@@ -123,7 +123,7 @@ const BranchView = ({ dataMaps, colorMapping }) => {
             <div className={styles.branchHeight}>
                 <div className={styles.branchHeightName}>Branch Height</div>
                 <div className={styles.branchHeightPlot}>
-                    <HeightGraph />
+                    <HeightGraph dataMaps={dataMaps} colorMapping={colorMapping} />
                 </div>
             </div>
 

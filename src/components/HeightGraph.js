@@ -23,51 +23,39 @@ ChartJS.register(
   Filler
 );
 
-const HeightGraph = () => {
-  // Sample data
-  const heights = [0, 5, 10, 15, 20];
-  const data1 = heights.map((height) => ({
-    x: Array.from({ length: 10 }, () => Math.random() * 20),
-    y: Array.from({ length: 10 }, () => height),
-  }));
-  const data2 = heights.map((height) => ({
-    x: Array.from({ length: 10 }, () => Math.random() * 20),
-    y: Array.from({ length: 10 }, () => height),
-  }));
-
-  const redData = {
-    datasets: [
-      {
-        label: 'Red Data Set',
-        data: data1.flatMap((d) => d.x.map((x, i) => ({ x, y: d.y[i] }))),
-        backgroundColor: 'red',
-        pointRadius: 5,
-        pointHoverRadius: 7,
-        showLine: true,
-        borderColor: 'red',
-        borderWidth: 1,
-        pointStyle: 'circle',
-        borderDash: [5, 5],
-      },
-    ],
+const HeightGraph = ({ dataMaps, colorMapping }) => {
+  const getData = (color) => {
+    const heights = [0, 5, 10, 15, 20];
+    return heights.map((height) => ({
+      x: Array.from({ length: 10 }, () => Math.random() * 20),
+      y: Array.from({ length: 10 }, () => height),
+      backgroundColor: color,
+    }));
   };
 
-  const greenData = {
-    datasets: [
-      {
-        label: 'Green Data Set',
-        data: data2.flatMap((d) => d.x.map((x, i) => ({ x, y: d.y[i] }))),
-        backgroundColor: 'green',
-        pointRadius: 5,
-        pointHoverRadius: 7,
-        showLine: true,
-        borderColor: 'green',
-        borderWidth: 1,
-        pointStyle: 'circle',
-        borderDash: [5, 5],
-      },
-    ],
-  };
+  const datasets = [];
+  Object.entries(dataMaps).forEach(([sampleKey, sampleObject]) => {
+    Object.entries(sampleObject).forEach(([dayKey, sampleDayObject]) => {
+      if (colorMapping[sampleKey] && colorMapping[sampleKey][sampleDayObject.dayIndex]) {
+        const color = colorMapping[sampleKey][sampleDayObject.dayIndex];
+        const data = getData(color).flatMap((d) => d.x.map((x, i) => ({ x, y: d.y[i] })));
+        datasets.push({
+          label: `${sampleKey} - ${dayKey}`,
+          data: data,
+          backgroundColor: color,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          showLine: true,
+          borderColor: color,
+          borderWidth: 1,
+          pointStyle: 'circle',
+          borderDash: [5, 5],
+        });
+      }
+    });
+  });
+
+  const chartData = { datasets };
 
   const options = {
     scales: {
@@ -123,11 +111,8 @@ const HeightGraph = () => {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <div style={{ width: '45%', height: '500px', backgroundColor: 'rgba(192, 192, 192, 0.3)' }}>
-        <Scatter data={redData} options={options} />
-      </div>
-      <div style={{ width: '45%', height: '500px', backgroundColor: 'rgba(192, 192, 192, 0.3)' }}>
-        <Scatter data={greenData} options={options} />
+      <div style={{ width: '90%', height: '500px', backgroundColor: 'rgba(192, 192, 192, 0.3)' }}>
+        <Scatter data={chartData} options={options} />
       </div>
     </div>
   );
