@@ -11,37 +11,37 @@ function transformDataForDay10Graph(jsonData) {
     for (let i = 0; i < jsonData.branch.noBranches; i++) {
         let branchTopId = 'branch_' + i;
         let eachBranchTop = {
-            "id": branchTopId + '_top',
-            "name": branchTopId,
-            "color": "darkgreen",
-            "x": jsonData["branch10Day"]["branchInd_" + i]["branchUpperPos"][1] * 1.5,
-            "y": (jsonData["branch10Day"]["branchInd_" + i]["branchUpperPos"][2] - 120) * 1.5,
-            "z": jsonData["branch10Day"]["branchInd_" + i]["branchUpperPos"][0] * 1.5
+            id: branchTopId + '_top',
+            name: branchTopId,
+            color: 'darkgreen',
+            x: jsonData['branch10Day']['branchInd_' + i]['branchUpperPos'][1] * 1.5,
+            y: (jsonData['branch10Day']['branchInd_' + i]['branchUpperPos'][2] - 120) * 1.5,
+            z: jsonData['branch10Day']['branchInd_' + i]['branchUpperPos'][0] * 1.5,
         };
         nodes.push(eachBranchTop);
         let branchEndId = 'branch_' + i;
         let eachBranchEnd = {
-            "id": branchEndId + '_end',
-            "name": branchEndId,
-            "color": "darkgreen",
-            "x": jsonData["branch10Day"]["branchInd_" + i]["branchLowerPos"][1] * 1.5,
-            "y": (jsonData["branch10Day"]["branchInd_" + i]["branchLowerPos"][2] - 120) * 1.5,
-            "z": jsonData["branch10Day"]["branchInd_" + i]["branchLowerPos"][0] * 1.5
+            id: branchEndId + '_end',
+            name: branchEndId,
+            color: 'darkgreen',
+            x: jsonData['branch10Day']['branchInd_' + i]['branchLowerPos'][1] * 1.5,
+            y: (jsonData['branch10Day']['branchInd_' + i]['branchLowerPos'][2] - 120) * 1.5,
+            z: jsonData['branch10Day']['branchInd_' + i]['branchLowerPos'][0] * 1.5,
         };
         nodes.push(eachBranchEnd);
         let branch = {
-            "source": branchEndId + '_top',
-            "target": branchEndId + '_end',
-            "color": "white"
-        }
+            source: branchEndId + '_top',
+            target: branchEndId + '_end',
+            color: 'white',
+        };
         links.push(branch);
 
         if (i !== 0) {
             let stem = {
-                "source": lastBranchId,
-                "target": branchEndId + '_end',
-                "color": "grey"
-            }
+                source: lastBranchId,
+                target: branchEndId + '_end',
+                color: 'grey',
+            };
             links.push(stem);
         }
 
@@ -59,26 +59,26 @@ const BranchView = ({ dataMaps, colorMapping }) => {
     const [spreadGreenData, setSpreadGreenData] = useState({ labels: [], datasets: [] });
 
     useEffect(() => {
-        console.log("dataMaps: ", dataMaps);
+        console.log('dataMaps: ', dataMaps);
 
-        const labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+        const labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
         const redData = new Array(labels.length).fill(0);
         const greenData = new Array(labels.length).fill(0);
 
         Object.entries(dataMaps).forEach(([sampleKey, sampleObject]) => {
             Object.entries(sampleObject).forEach(([dayKey, sampleDayObject]) => {
-                if (dayKey === "10D" && sampleDayObject.link) {
+                if (dayKey === '10D' && sampleDayObject.link) {
                     fetch(`/data/${sampleDayObject.link}`)
-                        .then(response => response.json())
-                        .then(data => {
+                        .then((response) => response.json())
+                        .then((data) => {
                             console.log('Fetched data: ', data);
                             let day10GraphData = transformDataForDay10Graph(data);
-                            setChartsBranchData(prevData => ({
+                            setChartsBranchData((prevData) => ({
                                 ...prevData,
                                 [sampleKey]: {
-                                    ...dataMaps[sampleKey]["10D"],
-                                    "data": day10GraphData
-                                }
+                                    ...dataMaps[sampleKey]['10D'],
+                                    data: day10GraphData,
+                                },
                             }));
 
                             // Extract the spread data based on the segment index
@@ -94,9 +94,9 @@ const BranchView = ({ dataMaps, colorMapping }) => {
                                     {
                                         label: 'Red Data',
                                         data: redData,
-                                        backgroundColor: 'red'
-                                    }
-                                ]
+                                        backgroundColor: 'red',
+                                    },
+                                ],
                             });
 
                             setSpreadGreenData({
@@ -105,12 +105,12 @@ const BranchView = ({ dataMaps, colorMapping }) => {
                                     {
                                         label: 'Green Data',
                                         data: greenData,
-                                        backgroundColor: 'green'
-                                    }
-                                ]
+                                        backgroundColor: 'green',
+                                    },
+                                ],
                             });
                         })
-                        .catch(error => console.error('Error fetching data:', error));
+                        .catch((error) => console.error('Error fetching data:', error));
                 }
             });
         });
@@ -122,7 +122,9 @@ const BranchView = ({ dataMaps, colorMapping }) => {
 
             <div className={styles.branchHeight}>
                 <div className={styles.branchHeightName}>Branch Height</div>
-                <div className={styles.branchHeightPlot}><HeightGraph /></div>
+                <div className={styles.branchHeightPlot}>
+                    <HeightGraph />
+                </div>
             </div>
 
             <div className={styles.branchSpread}>
