@@ -110,10 +110,12 @@ const HeightGraph = ({ dataMaps, colorMapping }) => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <div style={{ width: '90%', height: '500px', backgroundColor: 'rgba(192, 192, 192, 0.3)' }}>
-        <Scatter data={chartData} options={options} />
-      </div>
+    <div style={{ overflowX: 'scroll', whiteSpace: 'nowrap' }}>
+      {datasets.map((dataset, index) => (
+        <div key={index} style={{ display: 'inline-block', width: '500px', height: '500px', marginRight: '10px' }}>
+          <Scatter data={{ datasets: [dataset] }} options={options} />
+        </div>
+      ))}
     </div>
   );
 };
