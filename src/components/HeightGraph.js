@@ -55,7 +55,9 @@ const HeightGraph = ({ dataMaps, colorMapping }) => {
     });
   });
 
-  const chartData = { datasets };
+  const chartData = (dataset) => ({
+    datasets: [dataset]
+  });
 
   const options = {
     scales: {
@@ -112,8 +114,8 @@ const HeightGraph = ({ dataMaps, colorMapping }) => {
   return (
     <div style={{ overflowX: 'scroll', whiteSpace: 'nowrap' }}>
       {datasets.map((dataset, index) => (
-        <div key={index} style={{ display: 'inline-block', width: '500px', height: '500px', marginRight: '10px' }}>
-          <Scatter data={{ datasets: [dataset] }} options={options} />
+        <div key={index} style={{ display: 'inline-block', width: '300px', height: '500px', marginRight: '10px' }}>
+          <Scatter data={chartData(dataset)} options={options} />
         </div>
       ))}
     </div>
