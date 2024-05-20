@@ -4,7 +4,7 @@ import styles from '../styles/SpreadOfBranchesGraph.module.css';
 
 const SpreadOfBranchesGraph = ({ dataMaps, colorMapping }) => {
   const [chartsData, setChartsData] = useState({});
-  const canvasRef = useRef(null);
+  const canvasRefs = useRef({});
 
   useEffect(() => {
     console.log(dataMaps);
@@ -15,8 +15,11 @@ const SpreadOfBranchesGraph = ({ dataMaps, colorMapping }) => {
             .then((response) => response.json())
             .then((data) => {
               console.log('Fetched data:', data);
-              const segmentIndices = Object.keys(data.segment).filter(key => key.startsWith('segmentInd_'));
-              const spreadData = segmentIndices.map(key => data.segment[key].maxSpreadSegVal);
+              const branchIndices = Object.keys(data.branch).filter(key => key.startsWith('branchInd_'));
+              const spreadData = branchIndices.map(key => ({
+                branchIndex: key,
+                branchSpread: data.branch[key].branchSpread,
+              }));
 
               setChartsData((prevData) => ({
                 ...prevData,
@@ -36,51 +39,60 @@ const SpreadOfBranchesGraph = ({ dataMaps, colorMapping }) => {
   }, [dataMaps, colorMapping]);
 
   useEffect(() => {
-    if (!canvasRef.current || !Object.keys(chartsData).length) return;
+    Object.entries(chartsData).forEach(([sampleKey, sampleObject], sampleIndex) => {
+      const canvasId = `${sampleKey}-${sampleIndex}`;
+      if (!canvasRefs.current[canvasId]) return;
 
-    const context = canvasRef.current.getContext('2d');
-    const datasets = Object.entries(chartsData).map(([sampleKey, sampleObject]) => {
-      return Object.entries(sampleObject).map(([dayKey, dayData]) => {
+      const context = canvasRefs.current[canvasId].getContext('2d');
+
+      if (canvasRefs.current[canvasId].chart) {
+        canvasRefs.current[canvasId].chart.destroy();
+      }
+
+      const labels = sampleObject['4D']?.data.map(item => item.branchIndex) || [];
+      const datasets = Object.entries(sampleObject).map(([dayKey, dayData]) => {
         if (!dayData || !dayData.data) return null;
         return {
           label: `${sampleKey} - ${dayKey}`,
-          data: dayData.data,
+          data: dayData.data.map(item => item.branchSpread),
           backgroundColor: dayData.color,
         };
-      }).filter(Boolean);  // Remove null values
-    }).flat();
+      }).filter(Boolean); // Remove null values
 
-    const labels = Object.keys(chartsData).length > 0 ? chartsData[Object.keys(chartsData)[0]]['4D']?.data.map((_, idx) => `Segment ${idx + 1}`) : [];
-
-    const chart = new Chart(context, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: datasets,
-      },
-      options: {
-        scales: {
-          x: {
-            beginAtZero: true
-          },
-          y: {
-            beginAtZero: true
-          }
+      const chart = new Chart(context, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: datasets,
         },
-        plugins: {
-          legend: {
-            display: false, // Hide the legend
+        options: {
+          scales: {
+            x: {
+              beginAtZero: true,
+            },
+            y: {
+              beginAtZero: true,
+            },
+          },
+          plugins: {
+            legend: {
+              display: true, // Show the legend
+            },
           },
         },
-      }
+      });
+
+      canvasRefs.current[canvasId].chart = chart;
     });
-
-    return () => chart.destroy();
   }, [chartsData]);
 
   return (
     <div style={{ overflowX: 'scroll', whiteSpace: 'nowrap' }}>
-      <canvas ref={canvasRef} className={styles.spreadOfBranchesGraph}></canvas>
+      {Object.keys(chartsData).map((sampleKey, index) => (
+        <div key={sampleKey} style={{ display: 'inline-block', width: '600px', height: '400px', marginRight: '10px' }}>
+          <canvas ref={el => canvasRefs.current[`${sampleKey}-${index}`] = el} className={styles.spreadOfBranchesGraph}></canvas>
+        </div>
+      ))}
     </div>
   );
 };
