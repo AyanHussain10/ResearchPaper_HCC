@@ -129,22 +129,22 @@ const BranchView = ({ dataMaps, colorMapping }) => {
             </div>
 
             <div className={styles.branchSpread}>
-                <div className={styles.branchSpreadName}>Branch Spread (Red)</div>
+                <div className={styles.branchSpreadName}>Branch Spread</div>
                 <div className={styles.branchSpreadPlot}>
                     {spreadRedData.labels.length > 0 && (
-                        <SpreadOfBranchesGraph data={spreadRedData} label="Red Data" />
+                        <SpreadOfBranchesGraph dataMaps={dataMaps} colorMapping={colorMapping} />
                     )}
                 </div>
             </div>
 
-            <div className={styles.branchSpread}>
+            {/* <div className={styles.branchSpread}>
                 <div className={styles.branchSpreadName}>Branch Spread (Green)</div>
                 <div className={styles.branchSpreadPlot}>
                     {spreadGreenData.labels.length > 0 && (
                         <SpreadOfBranchesGraph data={spreadGreenData} label="Green Data" />
                     )}
                 </div>
-            </div>
+            </div> */}
 
             <div className={styles.dayTenView}>
                 <div className={styles.dayTenViewName}>Day 10 View</div>
