@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Scatter } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -9,7 +9,7 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 } from 'chart.js';
 
 ChartJS.register(
@@ -24,15 +24,45 @@ ChartJS.register(
 );
 
 const HeightGraph = ({ dataMaps, colorMapping }) => {
+  const [chartsData, setChartsData] = useState({});
+
+  useEffect(() => {
+    console.log(dataMaps);
+    Object.entries(dataMaps).forEach(([sampleKey, sampleObject]) => {
+      Object.entries(sampleObject).forEach(([dayKey, sampleDayObject]) => {
+        if (sampleDayObject.link) {
+          fetch(`/data/${sampleDayObject.link}`)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log('Fetched data:', data);
+              setChartsData((prevData) => ({
+                ...prevData,
+                [sampleKey]: {
+                  ...prevData[sampleKey],
+                  [dayKey]: data,
+                },
+              }));
+            })
+            .catch((error) => console.error('Error fetching data:', error));
+        }
+      });
+    });
+  }, [dataMaps]);
+
   const getDatasets = (sampleObject, sampleKey) => {
     const datasets = [];
-    const heights = [0, 5, 10, 15, 20];
+    const days = ['4D', '7D', '10D'];
 
-    Object.entries(sampleObject).forEach(([dayKey, sampleDayObject], dayIndex) => {
-      if (colorMapping[sampleKey] && colorMapping[sampleKey][dayIndex]) {
+    days.forEach((dayKey, dayIndex) => {
+      const dayData = sampleObject[dayKey];
+      if (dayData && dayData.branch && colorMapping[sampleKey] && colorMapping[sampleKey][dayIndex]) {
         const color = colorMapping[sampleKey][dayIndex];
+        const heights = Object.keys(dayData.branch)
+          .filter(key => key.startsWith('branchInd_'))
+          .map(key => dayData.branch[key].branchHeight);
+
         const data = heights.map((height) => ({
-          x: dayIndex * 10,
+          x: dayIndex * 10,  // Positioning nodes horizontally based on the day
           y: height,
           backgroundColor: color,
         }));
@@ -43,41 +73,48 @@ const HeightGraph = ({ dataMaps, colorMapping }) => {
           backgroundColor: color,
           pointRadius: 5,
           pointHoverRadius: 7,
-          showLine: true,
+          showLine: false,
           borderColor: color,
           borderWidth: 1,
           pointStyle: 'circle',
-          borderDash: [5, 5],
         });
 
         // Connect nodes between days
-        if (dayIndex < Object.keys(sampleObject).length - 1) {
-          const nextDayKey = Object.keys(sampleObject)[dayIndex + 1];
-          const nextDayObject = sampleObject[nextDayKey];
+        if (dayIndex < days.length - 1) {
+          const nextDayKey = days[dayIndex + 1];
+          const nextDayData = sampleObject[nextDayKey];
           const nextColor = colorMapping[sampleKey][dayIndex + 1];
 
-          heights.forEach((height, i) => {
-            const currentNode = {
-              x: dayIndex * 10,
-              y: height,
-              backgroundColor: color,
-            };
-            const nextNode = {
-              x: (dayIndex + 1) * 10,
-              y: heights[i],
-              backgroundColor: nextColor,
-            };
+          if (nextDayData && nextDayData.branch) {
+            const nextHeights = Object.keys(nextDayData.branch)
+              .filter(key => key.startsWith('branchInd_'))
+              .map(key => nextDayData.branch[key].branchHeight);
 
-            datasets.push({
-              label: `Connection ${sampleKey} - ${dayKey} to ${nextDayKey}`,
-              data: [currentNode, nextNode],
-              backgroundColor: nextColor,
-              pointRadius: 0,
-              showLine: true,
-              borderColor: nextColor,
-              borderWidth: 1,
+            heights.forEach((currentHeight, i) => {
+              if (nextHeights[i] !== undefined) {
+                const currentNode = {
+                  x: dayIndex * 10,
+                  y: currentHeight,
+                  backgroundColor: color,
+                };
+                const nextNode = {
+                  x: (dayIndex + 1) * 10,
+                  y: nextHeights[i],
+                  backgroundColor: nextColor,
+                };
+
+                datasets.push({
+                  label: `Connection ${sampleKey} - ${dayKey} to ${nextDayKey}`,
+                  data: [currentNode, nextNode],
+                  backgroundColor: nextColor,
+                  pointRadius: 0,
+                  showLine: true,
+                  borderColor: nextColor,
+                  borderWidth: 1,
+                });
+              }
             });
-          });
+          }
         }
       }
     });
@@ -100,7 +137,10 @@ const HeightGraph = ({ dataMaps, colorMapping }) => {
         },
         ticks: {
           stepSize: 10,
-          callback: (value) => `Day ${value / 10 + 1}`,
+          callback: (value) => {
+            const dayMap = { 0: 'Day 4', 10: 'Day 7', 20: 'Day 10' };
+            return dayMap[value] || '';
+          },
         },
       },
       y: {
@@ -119,8 +159,11 @@ const HeightGraph = ({ dataMaps, colorMapping }) => {
     },
     plugins: {
       title: {
-        display: true,
+        display: false,  // Disable the chart title
         text: 'Height Graph',
+      },
+      legend: {
+        display: false,  // Disable the legend
       },
       tooltip: {
         callbacks: {
@@ -143,8 +186,8 @@ const HeightGraph = ({ dataMaps, colorMapping }) => {
 
   return (
     <div style={{ overflowX: 'scroll', whiteSpace: 'nowrap' }}>
-      {Object.entries(dataMaps).map(([sampleKey, sampleObject], index) => (
-        <div key={index} style={{ display: 'inline-block', width: '500px', height: '500px', marginRight: '10px' }}>
+      {Object.entries(chartsData).map(([sampleKey, sampleObject], index) => (
+        <div key={index} style={{ display: 'inline-block', width: '300px', height: '500px', marginRight: '10px' }}>
           <Scatter data={{ datasets: getDatasets(sampleObject, sampleKey) }} options={chartOptions} />
         </div>
       ))}

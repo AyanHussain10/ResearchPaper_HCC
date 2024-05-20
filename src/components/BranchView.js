@@ -54,6 +54,7 @@ function transformDataForDay10Graph(jsonData) {
 }
 
 const BranchView = ({ dataMaps, colorMapping }) => {
+  console.log(dataMaps)
     const [chartsBranchData, setChartsBranchData] = useState({});
     const [spreadRedData, setSpreadRedData] = useState({ labels: [], datasets: [] });
     const [spreadGreenData, setSpreadGreenData] = useState({ labels: [], datasets: [] });
