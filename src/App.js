@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import DimensionSelection from './components/DimensionSelection';
-import SegmentView from './components/SegmentView';
-import SegmentViewMap from './components/SegmentViewMap';
-import BranchView from './components/BranchView';
+import DimensionSelection from './components/DimensionSelection/DimensionSelection';
+import SegmentView from './components/unused/SegmentView';
+import SegmentViewMap from './components/segment/SegmentViewMap';
+import BranchView from './components/branch/BranchView';
 import './App.css';
 
 function App() {
@@ -36,13 +36,15 @@ function App() {
     return [dataForChart]; // RadarChart expects an array of these data arrays
   }
 
-  const [dataMaps, setdataMaps] = useState({numIndex: 0});
-  // const [dataUrls, setDataUrls] = useState([]);
+  // const [dataMaps, setdataMaps] = useState({numIndex: 0});
+  const [dataMaps, setdataMaps] = useState({numIndex: 0, 
+                                            genoMap: {count :0}, 
+                                            trtMap: {count :0}});
 
   // let index = -1;
   const fetchChartData = (filename) => {
-    // setDataUrls(prevUrls => [...prevUrls, filename]);
-
+   
+    // console.log("fetchChartData, ", filename)
     let parts = filename.split('_');
     let genotype = parts[0];
     let treatment = parts[1] === 'H' ? 'HDNT' : 'CONTROL';
@@ -108,20 +110,37 @@ function App() {
       const newdataMaps = { ...prevdataMaps };
       if (!(genoTrtComb in newdataMaps)) {
         newdataMaps["numIndex"] = prevdataMaps["numIndex"] + 1;
+        
+        if (!(genotype in newdataMaps["genoMap"])) {
+          newdataMaps["genoMap"][genotype] = newdataMaps["genoMap"]['count'];
+          newdataMaps["genoMap"]['count'] = newdataMaps["genoMap"]['count'] + 1;
+        }
+
+        if (!(treatment in newdataMaps["trtMap"])) {
+          newdataMaps["trtMap"][treatment] = newdataMaps["trtMap"]['count'];
+          newdataMaps["trtMap"]['count'] = newdataMaps["trtMap"]['count'] + 1;
+        }
+
         newdataMaps[genoTrtComb] = {
           '4D': {sampleIndex: prevdataMaps["numIndex"], 
-                 genoIndex: indexGeno,
-                 treatIndex: indexTrt,
+                 genoIndex: newdataMaps["genoMap"][genotype],
+                 treatIndex: newdataMaps["trtMap"][treatment],
+                //  genoIndex: indexGeno,
+                //  treatIndex: indexTrt,
                  dayIndex: 0,
                  color: colorMapping[genoTrtComb][0]}, 
           '7D': {sampleIndex: prevdataMaps["numIndex"], 
-                 genoIndex: indexGeno,
-                 treatIndex: indexTrt,
+                 genoIndex: newdataMaps["genoMap"][genotype],
+                 treatIndex: newdataMaps["trtMap"][treatment],
+                //  genoIndex: indexGeno,
+                //  treatIndex: indexTrt,
                  dayIndex: 1,
                  color: colorMapping[genoTrtComb][1]}, 
           '10D': {sampleIndex: prevdataMaps["numIndex"], 
-                 genoIndex: indexGeno,
-                 treatIndex: indexTrt,
+                 genoIndex: newdataMaps["genoMap"][genotype],
+                 treatIndex: newdataMaps["trtMap"][treatment],
+                //  genoIndex: indexGeno,
+                //  treatIndex: indexTrt,
                  dayIndex: 2,
                  color: colorMapping[genoTrtComb][2]}
         };
@@ -132,8 +151,6 @@ function App() {
         time: timeSeq,
         // color: colorMapping[genoTrtComb][indexTime]
       };
-      
-      console.log(newdataMaps)
       return newdataMaps;
     });
   };
@@ -141,8 +158,7 @@ function App() {
   return (
     <div className="App">
       <DimensionSelection onFetchChartData={fetchChartData} />
-      {/* <SegmentView dataUrls={dataUrls} /> */}
-      {/* <SegmentViewMap dataMaps={dataMaps} /> */}
+      <SegmentViewMap dataMaps={dataMaps} />
       <BranchView dataMaps={dataMaps}/>
     </div>
   );
