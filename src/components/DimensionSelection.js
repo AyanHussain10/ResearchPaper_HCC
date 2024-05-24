@@ -1,27 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../styles/DimensionSelection.module.css';
 import CheckboxTable from './CheckboxTable';
-import { useState } from 'react';
 import DimensionColorMapping from './DimensionColorMapping';
+import VegetationIndexInputs from './VegetationIndexInputs';
 
-const DimensionSelection = ({ onFetchChartData }) => {
-  
+const DimensionSelection = ({ onFetchChartData, equations, onEquationChange }) => {
   const [selectedOptions, setSelectedOptions] = useState({
     genotype: [],
     treatment: [],
-    time: []
+    time: [],
   });
 
   return (
     <div className={styles.firstColumn}>
       <div className={styles.dimensionSelection}>
-        <h2 className={styles.dimensionTitle}>
-          Dimension Selection
-        </h2>
+        <h2 className={styles.dimensionTitle}>Dimension Selection</h2>
         <CheckboxTable onFetchChartData={onFetchChartData} />
       </div>
       <div>
-        <DimensionColorMapping/>
+        <DimensionColorMapping />
+      </div>
+      <div>
+        <VegetationIndexInputs
+          equations={equations}
+          onEquationChange={onEquationChange}
+        />
       </div>
     </div>
   );
