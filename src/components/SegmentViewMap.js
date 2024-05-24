@@ -19,14 +19,15 @@ function calculateVegetationIndex(equation, data) {
 
 // Function to transform JSON data into a suitable format for the RadarChartComponent
 function transformDataForRadarChart(jsonData, equations) {
+  const { colAvgR, colAvgG, colAvgB } = jsonData.panicle;
   const dataForChart = [
     { axis: "Height", value: jsonData.panicle.height / 300 },
     { axis: "Volume", value: jsonData.panicle.volume / 10000 },
     { axis: "Spread", value: jsonData.panicle.maxSpreadVal / 50 },
     { axis: "Branches", value: jsonData.panicle.noTopSeeds / 20 },
-    { axis: "Avg Red", value: jsonData.panicle.colAvgR },
-    { axis: "Avg Green", value: jsonData.panicle.colAvgG },
-    { axis: "Avg Blue", value: jsonData.panicle.colAvgB },
+    { axis: "Avg Red", value: colAvgR },
+    { axis: "Avg Green", value: colAvgG },
+    { axis: "Avg Blue", value: colAvgB },
     { axis: "Vegetation Index 1", value: calculateVegetationIndex(equations.equation1, jsonData) },
     { axis: "Vegetation Index 2", value: calculateVegetationIndex(equations.equation2, jsonData) },
     { axis: "Vegetation Index 3", value: calculateVegetationIndex(equations.equation3, jsonData) },
@@ -57,7 +58,7 @@ const SegmentViewMap = ({ dataMaps, equations }) => {
   const [chartsData, setChartsData] = useState(dataMaps);
 
   useEffect(() => {
-    setChartsData((prevData) => ({ ...prevData, numIndex: dataMaps["numIndex"] }));
+    setChartsData((prevData) => ({ ...prevData, numIndex: dataMaps.numIndex }));
     Object.entries(dataMaps).forEach(([sampleKey, sampleObject]) => {
       Object.entries(sampleObject).forEach(([dayKey, sampleDayObject]) => {
         if (sampleDayObject.link) {
